@@ -1,0 +1,53 @@
+@mixin doBuild($prop, $value, $important: false, $name: $prop) {
+  @if ($important) {
+    .keep-#{$name}-#{$value} {
+      #{$prop}: #{$value}px !important;
+    }
+  } @else {
+    .#{$name}-#{$value} {
+      #{$prop}: #{$value}px;
+    }
+  }
+}
+
+@mixin toLayout($value, $important: false) {
+  @include doBuild(width, $value, $important);
+  @include doBuild(height, $value, $important);
+  @include doBuild(padding, $value, $important);
+  @include doBuild(margin, $value, $important);
+  @include doBuild(padding-top, $value, $important);
+  @include doBuild(margin-top, $value, $important);
+  @include doBuild(padding-right, $value, $important);
+  @include doBuild(margin-right, $value, $important);
+  @include doBuild(padding-bottom, $value, $important);
+  @include doBuild(margin-bottom, $value, $important);
+  @include doBuild(padding-left, $value, $important);
+  @include doBuild(margin-left, $value, $important);
+
+  .ph-#{$value} {
+    padding-left: #{$value}px;
+    padding-right: #{$value}px;
+  }
+  .mh-#{$value} {
+    margin-left: #{$value}px;
+    margin-right: #{$value}px;
+  }
+  .pv-#{$value} {
+    padding-top: #{$value}px;
+    padding-bottom: #{$value}px;
+  }
+  .mv-#{$value} {
+    margin-top: #{$value}px;
+    margin-bottom: #{$value}px;
+  }
+}
+
+@each $value in 0 to 240 {
+  @if ($value / 5 == 0) {
+    @include toLayout($value);
+  } @else if ($value < 101) {
+    @if ($value / 2 == 0) {
+      @include toLayout($value);
+    }
+  }
+}

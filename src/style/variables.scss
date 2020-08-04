@@ -1,0 +1,17 @@
+/*
+Write your variables here. All available variables can be
+found in element-ui/packages/theme-chalk/src/common/var.scss.
+For example, to overwrite the theme color:
+*/
+//$--color-primary: #2F54EB;
+$--color-primary: #0099FF;
+$--color-warning: #D48806;
+$--color-success: #67C23A;
+$--color-danger: #F56C6C;
+$--color-violet: #512679;
+/// borderRadius|1|Radius|0
+$--border-radius-base: 4px;
+/// borderRadius|1|Radius|0
+$--border-radius-small: 2px;
+
+$-default-duration: .3s;
