@@ -1,27 +1,39 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <div>
-      <p>
-        If Element is successfully added to this project, you'll see an
-        <code v-text="'<el-button>'"></code>
-        below
-      </p>
-      <el-button>el-button</el-button>
-    </div>
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <ElContainer direction="vertical">
+      <ElHeader>a</ElHeader>
+      <ElContainer>
+        <ElMain>
+          <div>
+            <RequestPanel/>
+          </div>
+        </ElMain>
+      </ElContainer>
+    </ElContainer>
+    <!--    <img src="./assets/logo.png">-->
+    <!--    <div>-->
+    <!--      <p>-->
+    <!--        If Element is successfully added to this project, you'll see an-->
+    <!--        <code v-text="'<el-button>'"></code>-->
+    <!--        below-->
+    <!--      </p>-->
+    <!--      <el-button>el-button</el-button>-->
+    <!--    </div>-->
+    <!--    <HelloWorld msg="Welcome to Your Vue.js App"/>-->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import RequestPanel from '@/components/request/RequestPanel';
+// import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
-  }
-}
+    RequestPanel,
+    // HelloWorld
+  },
+};
 </script>
 
 <style>
@@ -29,8 +41,6 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
