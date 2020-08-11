@@ -553,6 +553,40 @@ $bd-directions: ('left', 'bottom', 'right', 'top');
 }
 
 
+/*
+半透明
+ */
+
+.opacity-0, .opacity-hide {
+  opacity: 0;
+}
+
+
+.opacity-half {
+  opacity: .5;
+}
+
+
+.opacity-1, .opacity-show {
+  opacity: 0;
+}
+
+
+.keep-opacity-0, .keep-opacity-hide {
+  opacity: 0;
+}
+
+
+.keep-opacity-half {
+  opacity: .5;
+}
+
+
+.keep-opacity-1, .keep-opacity-show {
+  opacity: 0;
+}
+
+
 // other
 
 .mouse-pointer {
