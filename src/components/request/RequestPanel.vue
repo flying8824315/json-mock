@@ -1,8 +1,8 @@
 <template>
   <div class="bg-white padding-20">
-    <div>
-      http://localhost:8042/cyhr/main/wechat/index-cities-text.jsp?openid={openid}&state=index
-    </div>
+    <div>URL: {{ formattedUrl }}</div>
+    <div>http://localhost:8042/cyhr/main/wechat/{index}/cities-text.jsp?openid={openid}&state=index</div>
+    <div>http://localhost:8042/cyhr/main/wechat/index-cities-text.jsp?openid={openid}&state=index</div>
     <RequestInputBar :request="request"></RequestInputBar>
     <div class="margin-top-20">
       <ElTabs v-model="activeTab" class="request-tabs" type="border-card">
@@ -18,6 +18,8 @@
 <script>
 import RequestInputBar from '@/components/request/RequestInputBar';
 import RequestParams from '@/components/request/RequestParams';
+import {formatUrl, parseUrl} from '@/components/request/url-parser';
+// import {jsonCopy} from '@/util';
 
 export default {
   name: 'RequestPanel',
@@ -29,52 +31,29 @@ export default {
         url: '',
       },
 
+      urls: {},
       params: {
-        restful: {},
-        search: {},
-        body: {},
+        hrefPath: [],
+        hrefQuery: [],
+        hashPath: [],
+        hashQuery: [],
       },
 
       activeTab: 'Params',
     };
   },
+  computed: {
+    formattedUrl() {
+      return formatUrl(this.urls, this.params);
+    },
+  },
   methods: {},
   created() {
     this.$watch(() => this.request.url, url => {
-      const mappings = {};
-      if (url) {
-        const {params} = this, {restful} = params, restfulArgs = {};
-        let start = 0;
-        do {
-          const open = url.indexOf('{', start);
-          if (open >= 0) {
-            start = open + 1;
-            const close = url.indexOf('}', open);
-            if (close > open) {
-              start = close + 1;
-              const placeholder = url.slice(open, close + 1);
-              const prop = placeholder.slice(1, -1).trim();
-              restfulArgs[prop] = restful[prop] || '';
-              mappings[placeholder] = prop;
-            }
-          } else {
-            break;
-          }
-          params.restful = restfulArgs;
-          // eslint-disable-next-line no-constant-condition
-        } while (true);
-        console.log(mappings);
-      } else {
-        //
-      }
-      console.log(url);
-    });
-
-    this.$watch(() => this.params.restful, {
-      handler(now) {
-        console.log(now);
-      },
-      deep: true,
+      const {params, urls} = url ? parseUrl(url) : {};
+      // console.log(jsonCopy(params), jsonCopy(urls));
+      this.params = params;
+      this.urls = urls;
     });
   },
 };

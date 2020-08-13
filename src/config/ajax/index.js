@@ -6,9 +6,12 @@ import beforeRequestPlugins from './plugins';
 // ============================================================================
 
 function concatUrls(...urls) {
-  let resultUrl = urls[0], {length} = urls;
+  let resultUrl = (urls[0] || ''), {length} = urls;
   for (let i = 1; i < length; i++) {
     const url = urls[i];
+    if (!url) {
+      continue;
+    }
     if (resultUrl.slice(-1) === '/') {
       resultUrl = url.substr(0, 1) === '/' ? `${resultUrl}${url.slice(1)}` : resultUrl + url;
     } else {

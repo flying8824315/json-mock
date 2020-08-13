@@ -19,7 +19,7 @@
       </ElSelect>
     </div>
     <div class="flex-1">
-      <ElInput placeholder="请求地址" v-model="request.url"></ElInput>
+      <ElInput placeholder="请求地址" v-model="request.url" clearable></ElInput>
     </div>
     <div>
       <ElButton type="primary">发送</ElButton>
