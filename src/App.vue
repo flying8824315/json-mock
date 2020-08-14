@@ -37,6 +37,10 @@ export default {
 </script>
 
 <style>
+body {
+  overflow: scroll;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -44,8 +48,12 @@ export default {
   color: #2c3e50;
 }
 
-.main-content{
+.main-content {
   width: 1216px;
   margin: auto;
+}
+
+.im-clear-gaps.el-form-item {
+  margin-bottom: 0 !important;
 }
 </style>

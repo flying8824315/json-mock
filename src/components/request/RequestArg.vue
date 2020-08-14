@@ -1,22 +1,25 @@
 <template>
-  <div class="border-box">
-    <h4>{{ label }}</h4>
-    <div>
-      <FormInput v-for="(param,index) in params"
-          v-model="param.value"
-          :label="param.prop"
-          :key="index"/>
-    </div>
+  <div v-show="param.available" class="flex">
+    <FormInput
+        class="flex-1" v-model="param.value"
+        :placeholder="param.prop?(param.prop+' value'):'value'">
+      <RequestArgLabel slot="label" :param="param"/>
+    </FormInput>
+    <RequestArgControl :param="param"/>
   </div>
 </template>
 
 <script>
+import RequestArgLabel from '@/components/request/RequestArgLabel';
+import RequestArgControl from '@/components/request/RequestArgControl';
+
 export default {
   name: 'RequestArg',
-  props: {
-    label: String,
-    params: {
-      type: Array,
+  components: {RequestArgLabel, RequestArgControl},
+  props: {param: Object},
+  methods: {
+    onInputValue(value) {
+      this.param.value = value;
     },
   },
 };

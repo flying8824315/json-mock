@@ -2,15 +2,28 @@ import {concatUrls} from '@/util';
 
 const WHILE = true, EMPTY_ARR = [];
 
+export function newRequestArg(placeholder = null, prop = null, value = null) {
+  return {
+    placeholder, prop, value,
+    // 用来标记删除前的动画
+    available: true,
+    // 标记当前参数是否启用
+    enable: true,
+  };
+}
+
 function pushArg(args, placeholder, prop, value = null) {
-  const arg = {placeholder, prop, value, preParsed: true};
+  const arg = newRequestArg(placeholder, prop, value);
+  // 用来标记该参数是预解析参数还是自定义参数，预解析参数不可修改参数名
+  arg.preParsed = true;
   args.push(arg);
   return arg;
 }
 
 function doParseQueryArgs(query, paramsArgs, prefix) {
+  const searchArgs = [];
+  paramsArgs[keyQuery(prefix)] = searchArgs;
   if (query) {
-    const searchArgs = [];
     const params = query.split('&'), {length} = params;
     for (let i = 0; i < length; i++) {
       const originArg = params[i];
@@ -27,17 +40,16 @@ function doParseQueryArgs(query, paramsArgs, prefix) {
           value = argVal;
         }
       }
-      const thisArg = pushArg(searchArgs, placeholder, name, value);
-      thisArg.origin = `${name}=${placeholder}`;
+      // const origin = `${name}=${placeholder}`;
+      pushArg(searchArgs, placeholder, name, value);
     }
-    paramsArgs[keyQuery(prefix)] = searchArgs;
   }
 }
 
 function parseCurlyPlaceholder(thisArgs, path, openIdx, closeIdx) {
   const placeholder = path.slice(openIdx, closeIdx + 1);
   const [prop, value] = placeholder.slice(1, -1).trim().split(':');
-  pushArg(thisArgs, placeholder, prop.trim(), value ? value.trim() : null);
+  pushArg(thisArgs, placeholder, prop.trim(), value ? value.trim() : null).required = true;
   return closeIdx + 1;
 }
 
@@ -46,12 +58,16 @@ function parseSlashPlaceholder(thisArgs, path, slashColonIdx) {
   const lastIdx = backslashIdx < 0 ? Infinity : backslashIdx;
   const placeholder = path.slice(slashColonIdx + 1, lastIdx);
   const prop = placeholder.slice(1);
-  pushArg(thisArgs, placeholder, prop);
+  pushArg(thisArgs, placeholder, prop).required = true;
   return lastIdx + 1;
 }
 
 function doParsePath(path, params, prefix) {
   let start = 0, thisArgs = [];
+  params[keyPath(prefix)] = thisArgs;
+  if (!path) {
+    return;
+  }
   do {
     const slashColonIdx = path.indexOf('/:', start);
     if (slashColonIdx < 0) {
@@ -84,7 +100,6 @@ function doParsePath(path, params, prefix) {
       }
     }
   } while (WHILE);
-  params[keyPath(prefix)] = thisArgs;
 }
 
 function keyPath(prefix) {
@@ -96,13 +111,11 @@ function keyQuery(prefix) {
 }
 
 function doParseSlicedUrl(url, params, urls, prefix) {
-  if (url) {
-    const [path, query] = url.split('?');
-    urls[keyPath(prefix)] = path;
-    urls[keyQuery(prefix)] = query;
-    doParsePath(path, params, prefix);
-    doParseQueryArgs(query, params, prefix);
-  }
+  const [path, query] = url ? url.split('?') : EMPTY_ARR;
+  urls[keyPath(prefix)] = path;
+  urls[keyQuery(prefix)] = query;
+  doParsePath(path, params, prefix);
+  doParseQueryArgs(query, params, prefix);
 }
 
 export function parseUrl(originUrl, baseURL, namespace) {
@@ -131,8 +144,10 @@ function formatQuery(params) {
   const thisArgs = params || EMPTY_ARR;
   const {length} = thisArgs, result = [];
   for (let i = 0; i < length; i++) {
-    const {origin, placeholder, value} = thisArgs[i];
-    result.push(origin.replace(placeholder, value || ''));
+    const {value, prop} = thisArgs[i];
+    if (prop) {
+      result.push(`${prop}=${value || ''}`);
+    }
   }
   return result.join('&');
 }
@@ -141,11 +156,16 @@ function joinOn(path, query, char) {
   return (path && query) ? `${path}${char}${query}` : path;
 }
 
+export function simpleUrl(urls, params) {
+  return formatPath((urls || EMPTY_ARR).hrefPath, (params || EMPTY_ARR).hrefPath);
+}
+
 export function formatUrl(urls, params) {
-  const hrefPath = formatPath(urls.hrefPath, params.hrefPath);
-  const hrefQuery = formatQuery(params.hrefQuery);
+  const thisUrls = urls || {}, thisArgs = params || {};
+  const hrefPath = formatPath(thisUrls.hrefPath, thisArgs.hrefPath);
+  const hrefQuery = formatQuery(thisArgs.hrefQuery);
   const href = joinOn(hrefPath, hrefQuery, '?');
-  const hashPath = formatPath(urls.hashPath, params.hashPath);
-  const hashQuery = formatQuery(params.hashQuery);
+  const hashPath = formatPath(thisUrls.hashPath, thisArgs.hashPath);
+  const hashQuery = formatQuery(thisArgs.hashQuery);
   return joinOn(href, joinOn(hashPath, hashQuery, '?'), '#');
 }

@@ -1,39 +1,64 @@
 <template>
-  <ElForm label-width="100px">
-    <div class="flex">
-      <RequestArg
-          v-if="hasRestFul"
-          class="width-half"
-          label="Restful Params"
-          :params="value.hrefPath"/>
-      <RequestArg
-          :class="{'keep-width-full':!hasRestFul}"
-          class="width-half"
-          label="Search Params"
-          :params="value.hrefQuery"/>
-    </div>
-  </ElForm>
+  <div>
+    <ElCollapse v-model="activeCollapseTab">
+      <ElCollapseItem name="1">
+        <div slot="title" class="font-bolder flex width-full">
+          <div class="flex-1" v-if="hasRestFul">Restful Params</div>
+          <div class="flex-1 flex-v-center width-full margin-right-20">
+            <span class="flex-1" :class="{'margin-left-10':hasRestFul}">Request Params</span>
+            <ElButtonGroup @click.native.stop>
+              <ElButton type="primary" plain @click="$emit('onReset')" icon="el-icon-refresh"/>
+              <ElButton type="primary" plain icon="el-icon-position"/>
+            </ElButtonGroup>
+          </div>
+        </div>
+        <div class="flex">
+          <RequestArgs
+              v-if="hasRestFul"
+              class="width-half"
+              :params.sync="value.hrefPath"/>
+          <RequestArgs
+              appendable
+              :class="{'keep-width-full':!hasRestFul}"
+              class="width-half"
+              :params.sync="value.hrefQuery"/>
+        </div>
+      </ElCollapseItem>
+      <ElCollapseItem name="2" title="Request Body">
+        <div slot="title" class="flex-v-center width-full margin-right-50">
+          <div class="font-bolder">Request Body</div>
+          <RequestContentType class="flex-1"/>
+        </div>
+      </ElCollapseItem>
+    </ElCollapse>
+  </div>
 </template>
 
 <script>
-import RequestArg from '@/components/request/RequestArg';
+import RequestArgs from '@/components/request/RequestArgs';
+import RequestContentType from '@/components/request/RequestContentType';
+
 function hasProperties(obj) {
   return obj && Object.keys(obj).length;
 }
 
 export default {
   name: 'RequestParams',
-  components:{RequestArg},
+  components: {RequestArgs, RequestContentType},
   props: {
     value: {
       type: Object,
       default() {
         return {
           hrefPath: [],
-          search: [],
         };
       },
     },
+  },
+  data() {
+    return {
+      activeCollapseTab: '1',
+    };
   },
   computed: {
     hasRestFul() {
@@ -42,9 +67,7 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.width-one-third {
-  width: 33.33%;
-}
+<style lang="scss">
+</style>
+<style scoped lang="scss">
 </style>

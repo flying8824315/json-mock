@@ -1,15 +1,12 @@
 <template>
   <div class="request-input-bar">
     <div>
-      <ElButton class="relative">
-        <ElIcon style="opacity: 0;" name="s-tools"></ElIcon>
-        <ElIcon class="absolute-center font-size-16" name="s-tools"></ElIcon>
-      </ElButton>
-    </div>
-    <div>
       <ElSelect
           class="request-field-method"
           v-model="request.method"
+          allow-create
+          filterable
+          default-first-option
           placeholder="请选择">
         <ElOption
             v-for="method in requestMethods"
@@ -19,7 +16,21 @@
       </ElSelect>
     </div>
     <div class="flex-1">
-      <ElInput placeholder="请求地址" v-model="request.url" clearable></ElInput>
+      <ElAutocomplete
+          class="width-full"
+          v-model="request.url"
+          :fetch-suggestions="onFetchDetail"
+          placeholder="请求地址"
+          :trigger-on-focus="false"
+          @select="onSelected"
+      ></ElAutocomplete>
+      <!--
+      <ElInput
+          class="input-url"
+          placeholder="请求地址"
+          v-model="request.url"
+          clearable></ElInput>
+          -->
     </div>
     <div>
       <ElButton type="primary">发送</ElButton>
@@ -67,6 +78,12 @@ export default {
       }
     },
   },
+  methods: {
+    onSelected() {
+    },
+    onFetchDetail() {
+    },
+  },
 };
 </script>
 
@@ -75,7 +92,6 @@ export default {
   display: flex;
 
   & > div {
-    //padding: 0 2px;
     box-sizing: border-box;
   }
 
@@ -89,6 +105,12 @@ export default {
 
   .request-field-method .el-input {
     width: 120px;
+  }
+
+  & input {
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: .5px;
   }
 }
 </style>
