@@ -33,7 +33,7 @@
           -->
     </div>
     <div>
-      <ElButton type="primary">发送</ElButton>
+      <ElButton @click="$emit('onSendRequest')" type="primary">发送</ElButton>
     </div>
   </div>
 </template>

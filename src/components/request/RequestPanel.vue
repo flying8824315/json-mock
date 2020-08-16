@@ -11,17 +11,16 @@
         {{ requestFinalUrl }}
       </ElLink>
     </div>
-    <RequestInputBar :request="request"/>
-    <div class="margin-top-20">
-      <ElTabs v-model="activeTab" class="request-tabs" type="border-card">
-        <ElTabPane label="Params" name="Params">
-          <RequestParams @onReset="onReset" v-model="params"></RequestParams>
-        </ElTabPane>
-        <ElTabPane label="Headers" name="Headers">
-          <RequestArgs appendable :params.sync="headers"/>
-        </ElTabPane>
-      </ElTabs>
-    </div>
+    <RequestInputBar @onSendRequest="onSendRequest" :request="request"/>
+    <ElTabs v-model="activeTab" class="request-tabs margin-top-20" type="border-card">
+      <ElTabPane label="Params" name="Params">
+        <RequestParams @onReset="onReset" v-model="params"></RequestParams>
+      </ElTabPane>
+      <ElTabPane label="Headers" name="Headers">
+        <RequestArgs appendable :params.sync="headers"/>
+      </ElTabPane>
+    </ElTabs>
+    <ResponseDetail/>
   </ElForm>
 </template>
 
@@ -29,20 +28,32 @@
 import RequestArgs from '@/components/request/RequestArgs';
 import RequestInputBar from '@/components/request/RequestInputBar';
 import RequestParams from '@/components/request/RequestParams';
+import ResponseDetail from '@/components/request/ResponseDetail';
 import {formatUrl, parseUrl, simpleUrl} from '@/components/request/url-parser';
 import {jsonCopy} from '@/util';
+
+function filterAvailable(props) {
+  return props.filter(({enable, prop}) => prop && enable);
+}
+
+function formatArgs(props) {
+  return filterAvailable(props).reduce((total, {prop, value}) => {
+    total[prop] = value || '';
+    return total;
+  }, {});
+}
 
 function filterAvailableProps(params) {
   const thisArgs = {};
   for (let key in params) {
-    thisArgs[key] = params[key].filter(({enable, prop}) => prop && enable);
+    thisArgs[key] = filterAvailable(params[key]);
   }
   return thisArgs;
 }
 
 export default {
   name: 'RequestPanel',
-  components: {RequestInputBar, RequestParams, RequestArgs},
+  components: {RequestInputBar, RequestParams, RequestArgs, ResponseDetail},
   data() {
     return {
       request: {
@@ -83,14 +94,16 @@ export default {
     requestConfig({request: {method}, urls, headers, requestArgs}) {
       return {
         method: (method || 'GET').toUpperCase(),
-        headers: filterAvailableProps(headers),
+        headers: formatArgs(headers),
         url: simpleUrl(urls, requestArgs),
-        params: requestArgs,
+        params: formatArgs(requestArgs.hrefQuery),
       };
     },
   },
   methods: {
-
+    onSendRequest() {
+      console.log(this.requestConfig);
+    },
     onReset() {
       this.params = jsonCopy(this.urlParams);
     },
@@ -98,7 +111,6 @@ export default {
   created() {
     this.$watch(() => this.request.url, {
       handler: url => {
-        console.log(url);
         const {params = {}, urls = {}} = url ? parseUrl(url) : {};
         this.urlParams = Object.freeze(jsonCopy(params));
         this.params = params;
