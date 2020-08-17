@@ -5,6 +5,7 @@ import router from './router';
 import store from './store';
 import DefinitionComponents from '@/config/packages';
 import './plugins/element.js';
+import 'jsoneditor/dist/jsoneditor.min.css'
 
 Vue.config.productionTip = false;
 

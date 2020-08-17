@@ -14,12 +14,14 @@
             v-model="jsonData"></JsonEditor>
         <JsonEditor0 :data="jsonObj"></JsonEditor0>
       </div>
+      <div ref="jsonEditor" :id="targetId" style="height: 400px;"></div>
     </ElCollapseItem>
   </ElCollapse>
 </template>
 
 <script>
 import {JsonEditor} from '@/components/editor/index';
+import JSONEditor from 'jsoneditor'
 
 export default {
   name: 'ResponseDetail',
@@ -41,6 +43,16 @@ export default {
       },
     };
   },
+  computed:{
+    targetId(){
+      return new Date().getTime().toString(36);
+    }
+  },
+  mounted() {
+    const container = this.$refs.jsonEditor
+    const options = {mode: 'tree'};
+    const editor = new JSONEditor(container, options);
+  }
 };
 </script>
 
