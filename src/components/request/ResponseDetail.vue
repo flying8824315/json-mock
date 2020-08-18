@@ -4,24 +4,15 @@
       <div slot="title" class="padding-left-15 font-bolder">
         Response
       </div>
-      <div>
-        <!--        -->
-        <JsonEditor :options="{
-            confirmText: 'confirm',
-            cancelText: 'cancel',
-        }"
-            :objData="jsonData"
-            v-model="jsonData"></JsonEditor>
-        <JsonEditor0 :data="jsonObj"></JsonEditor0>
-      </div>
-      <div ref="jsonEditor" :id="targetId" style="height: 400px;"></div>
+      <JsonEditor0 v-model="codemirrorJsonObj"></JsonEditor0>
     </ElCollapseItem>
   </ElCollapse>
 </template>
 
 <script>
 import {JsonEditor} from '@/components/editor/index';
-import JSONEditor from 'jsoneditor'
+
+const jsonData = '[{"items":[{"market_type":"forexdata","symbol":"XAUUSD"},{"market_type":"forexdata","symbol":"UKOIL"},{"market_type":"forexdata","symbol":"CORN"}],"name":""},{"items":[{"market_type":"forexdata","symbol":"XAUUSD"},{"market_type":"forexdata","symbol":"XAGUSD"},{"market_type":"forexdata","symbol":"AUTD"},{"market_type":"forexdata","symbol":"AGTD"}],"name":"贵金属"},{"items":[{"market_type":"forexdata","symbol":"CORN"},{"market_type":"forexdata","symbol":"WHEAT"},{"market_type":"forexdata","symbol":"SOYBEAN"},{"market_type":"forexdata","symbol":"SUGAR"}],"name":"农产品"},{"items":[{"market_type":"forexdata","symbol":"UKOIL"},{"market_type":"forexdata","symbol":"USOIL"},{"market_type":"forexdata","symbol":"NGAS"}],"name":"能源化工"}]'
 
 export default {
   name: 'ResponseDetail',
@@ -41,6 +32,7 @@ export default {
         name: 'computer',
         age: 25,
       },
+      codemirrorJsonObj: JSON.parse(jsonData),
     };
   },
   computed:{
@@ -49,9 +41,6 @@ export default {
     }
   },
   mounted() {
-    const container = this.$refs.jsonEditor
-    const options = {mode: 'tree'};
-    const editor = new JSONEditor(container, options);
   }
 };
 </script>

@@ -14,7 +14,10 @@
     <RequestInputBar @onSendRequest="onSendRequest" :request="request"/>
     <ElTabs v-model="activeTab" class="request-tabs margin-top-20" type="border-card">
       <ElTabPane label="Params" name="Params">
-        <RequestParams @onReset="onReset" v-model="params"></RequestParams>
+        <RequestParams
+            v-model="params"
+            @onReset="onReset"
+            :body.sync="body"/>
       </ElTabPane>
       <ElTabPane label="Headers" name="Headers">
         <RequestArgs appendable :params.sync="headers"/>
@@ -34,7 +37,7 @@ import {formatUrl, parseUrl, simpleUrl} from '@/components/request/url-parser';
 import {jsonCopy} from '@/util';
 
 function filterAvailable(props) {
-  return props.filter(({enable, prop}) => prop && enable);
+  return (props).filter(({enable, prop}) => prop && enable);
 }
 
 function formatArgs(props) {
@@ -47,7 +50,8 @@ function formatArgs(props) {
 function filterAvailableProps(params) {
   const thisArgs = {};
   for (let key in params) {
-    thisArgs[key] = filterAvailable(params[key]);
+    const args = params[key];
+    thisArgs[key] = filterAvailable(args);
   }
   return thisArgs;
 }
@@ -74,6 +78,7 @@ export default {
         hashPath: [],
         hashQuery: [],
       },
+      body: {},
       // 缓存
       urlParams: {},
 
@@ -132,6 +137,7 @@ export default {
     this.$watch(() => this.request.url, {
       handler: url => {
         const {params = {}, urls = {}} = url ? parseUrl(url) : {};
+        console.log(params);
         this.urlParams = Object.freeze(jsonCopy(params));
         this.params = params;
         this.urls = urls;

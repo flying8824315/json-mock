@@ -1,38 +1,82 @@
 <template>
-  <div>
-    <ObjectEditor :data="data"></ObjectEditor>
+  <div class="json-editor">
+    <textarea ref="textarea"/>
   </div>
 </template>
+
 <script>
-import ObjectEditor from './ObjectEditor';
+import CodeMirror from 'codemirror';
+import 'codemirror/addon/lint/lint.css';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/rubyblue.css';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/addon/lint/lint';
+import 'codemirror/addon/lint/json-lint';
+
+require('script-loader!jsonlint');
 
 export default {
-  name: 'JsonEditor0',
-  components: {ObjectEditor},
-  props: {
-    data: {
-      type: [Object, Array],
-      required: true,
-    },
-  },
-  computed: {},
+  name: 'JsonEditor',
+  /* eslint-disable vue/require-prop-types */
+  props: ['value'],
   data() {
     return {
-      dataTypes: [
-        {name: ''},
-      ],
-      value: 'aaa',
+      jsonEditor: false,
     };
   },
+  watch: {
+    value(value) {
+      const editorValue = this.jsonEditor.getValue();
+      if (value !== editorValue) {
+        this.jsonEditor.setValue(JSON.stringify(this.value, null, 2));
+      }
+    },
+  },
+  mounted() {
+    this.jsonEditor = CodeMirror.fromTextArea(this.$refs.textarea, {
+      lineNumbers: true,
+      mode: 'application/json',
+      gutters: ['CodeMirror-lint-markers'],
+      theme: 'rubyblue',
+      lint: true,
+    });
+
+    this.jsonEditor.setValue(JSON.stringify(this.value, null, 2));
+    this.jsonEditor.on('change', cm => {
+      this.$emit('changed', cm.getValue());
+      this.$emit('input', cm.getValue());
+    });
+    this.jsonEditor.on('focus', cm => {
+      cm.refresh();
+    });
+  },
   methods: {
-    getKey(value) {
+    getValue() {
+      return this.jsonEditor.getValue();
     },
   },
 };
 </script>
 
-<style scoped>
-.json-type-label {
-  color: gray;
+<style scoped lang="scss">
+.json-editor {
+  height: 100%;
+  position: relative;
+
+  ::v-deep {
+    .CodeMirror {
+      font-family: 'Operator Mono', 'Source Code Pro', Menlo, Monaco, Consolas, Courier New, monospace;
+      height: auto;
+      min-height: 300px;
+    }
+
+    .CodeMirror-scroll {
+      min-height: 300px;
+    }
+
+    .cm-s-rubyblue span.cm-string {
+      color: #F08047;
+    }
+  }
 }
 </style>

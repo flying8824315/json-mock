@@ -29,12 +29,14 @@
           <div class="font-bolder">Request Body</div>
           <RequestContentType class="flex-1"/>
         </div>
+        <JsonEditor v-model="requestBody"/>
       </ElCollapseItem>
     </ElCollapse>
   </div>
 </template>
 
 <script>
+import JsonEditor from '@/components/editor/json-editor/JsonEditor';
 import RequestArgs from '@/components/request/RequestArgs';
 import RequestContentType from '@/components/request/RequestContentType';
 
@@ -44,14 +46,22 @@ function hasProperties(obj) {
 
 export default {
   name: 'RequestParams',
-  components: {RequestArgs, RequestContentType},
+  components: {RequestArgs, RequestContentType, JsonEditor},
   props: {
+    // 请求参数
     value: {
       type: Object,
       default() {
         return {
           hrefPath: [],
         };
+      },
+    },
+    // request body
+    body: {
+      type: [Object, Array],
+      default() {
+        return {};
       },
     },
   },
@@ -63,6 +73,17 @@ export default {
   computed: {
     hasRestFul() {
       return hasProperties(this.value.hrefPath);
+    },
+    requestBody: {
+      get: ({body}) => body,
+      set(value) {
+        this.inputBody(value);
+      },
+    },
+    inputBody() {
+      const {'update:body': update} = this.$listeners;
+      return update || (() => {
+      });
     },
   },
 };
