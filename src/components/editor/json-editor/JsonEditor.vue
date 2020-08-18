@@ -6,10 +6,10 @@
 
 <script>
 import CodeMirror from 'codemirror';
-import 'codemirror/addon/lint/lint.css';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/rubyblue.css';
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/addon/lint/lint.css';
 import 'codemirror/addon/lint/lint';
 import 'codemirror/addon/lint/json-lint';
 

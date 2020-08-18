@@ -7,6 +7,7 @@ import './plugins/element.js';
 
 Vue.config.productionTip = false;
 
+// Vue.component('VueCodemirror', VueCodemirror);
 DefinitionComponents.forEach(component => {
   Vue.component(component.name, component);
 });

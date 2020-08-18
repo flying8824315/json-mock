@@ -29,14 +29,14 @@
           <div class="font-bolder">Request Body</div>
           <RequestContentType class="flex-1"/>
         </div>
-        <JsonEditor v-model="requestBody"/>
+        <JsonEditor class="json-editor" v-model="requestBody"/>
       </ElCollapseItem>
     </ElCollapse>
   </div>
 </template>
 
 <script>
-import JsonEditor from '@/components/editor/json-editor/JsonEditor';
+import {JsonEditor} from '@/components/editor';
 import RequestArgs from '@/components/request/RequestArgs';
 import RequestContentType from '@/components/request/RequestContentType';
 
