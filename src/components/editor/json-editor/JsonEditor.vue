@@ -1,58 +1,24 @@
 <template>
   <div class="json-editor">
-    <textarea ref="textarea"/>
+    <JsonObject :data="data" @input="onInput"></JsonObject>
   </div>
 </template>
 
 <script>
-import CodeMirror from 'codemirror';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/rubyblue.css';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/addon/lint/lint.css';
-import 'codemirror/addon/lint/lint';
-import 'codemirror/addon/lint/json-lint';
-
-require('script-loader!jsonlint');
+import JsonObject from '@/components/editor/json-editor/JsonObject';
 
 export default {
-  name: 'JsonEditor',
-  /* eslint-disable vue/require-prop-types */
-  props: ['value'],
-  data() {
-    return {
-      jsonEditor: false,
-    };
+  name: 'JsonFormEditor',
+  components: {JsonObject},
+  model: {
+    prop: 'data',
   },
-  watch: {
-    value(value) {
-      const editorValue = this.jsonEditor.getValue();
-      if (value !== editorValue) {
-        this.jsonEditor.setValue(JSON.stringify(this.value, null, 2));
-      }
-    },
-  },
-  mounted() {
-    this.jsonEditor = CodeMirror.fromTextArea(this.$refs.textarea, {
-      lineNumbers: true,
-      mode: 'application/json',
-      gutters: ['CodeMirror-lint-markers'],
-      theme: 'rubyblue',
-      lint: true,
-    });
-
-    this.jsonEditor.setValue(JSON.stringify(this.value, null, 2));
-    this.jsonEditor.on('change', cm => {
-      this.$emit('changed', cm.getValue());
-      this.$emit('input', cm.getValue());
-    });
-    this.jsonEditor.on('focus', cm => {
-      cm.refresh();
-    });
+  props: {
+    data: Object,
   },
   methods: {
-    getValue() {
-      return this.jsonEditor.getValue();
+    onInput(data) {
+      this.$emit('input', data);
     },
   },
 };
@@ -60,22 +26,20 @@ export default {
 
 <style scoped lang="scss">
 .json-editor {
-  height: 100%;
-  position: relative;
-
   ::v-deep {
-    .CodeMirror {
+    .json-colon {
       font-family: 'Operator Mono', 'Source Code Pro', Menlo, Monaco, Consolas, Courier New, monospace;
-      height: auto;
-      min-height: 300px;
+      font-size: 14px;
+      text-align: center;
+      line-height: 2;
     }
 
-    .CodeMirror-scroll {
-      min-height: 300px;
+    .input-align-left input {
+      text-align: left;
     }
 
-    .cm-s-rubyblue span.cm-string {
-      color: #F08047;
+    .min-width-btn {
+      min-width: 120px;
     }
   }
 }

@@ -29,7 +29,14 @@
           <div class="font-bolder">Request Body</div>
           <RequestContentType class="flex-1"/>
         </div>
-        <JsonEditor class="json-editor" v-model="requestBody"/>
+        <div class="flex">
+          <div class="flex-1"></div>
+          <ElSelect v-model="jsonEditorTheme">
+            <ElOption v-for="name in jsonEditorThemeArr"
+                :key="name" :value="name" :label="name"/>
+          </ElSelect>
+        </div>
+        <JsonEditor ref="jsonEditor" class="json-editor" :theme="jsonEditorTheme" v-model="requestBody"/>
       </ElCollapseItem>
     </ElCollapse>
   </div>
@@ -58,16 +65,13 @@ export default {
       },
     },
     // request body
-    body: {
-      type: [Object, Array],
-      default() {
-        return {};
-      },
-    },
+    body: String,
   },
   data() {
     return {
       activeCollapseTab: '1',
+      jsonEditorTheme: null,
+      jsonEditorThemeArr: [],
     };
   },
   computed: {
@@ -85,6 +89,12 @@ export default {
       return update || (() => {
       });
     },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      const themes = this.$refs.jsonEditor.getThemeNames();
+      this.jsonEditorThemeArr = themes;
+    });
   },
 };
 </script>

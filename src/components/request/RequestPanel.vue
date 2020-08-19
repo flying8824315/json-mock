@@ -5,10 +5,10 @@
     <div class="flex-center font-bolder height-36">
       <span class="inline-block padding-right-8 align-middle">Request URL: </span>
       <ElLink
-          :href="requestLinkUrl"
+          :href="displayUrl"
           target="_blank"
           class="font-bolder align-middle">
-        {{ requestFinalUrl }}
+        {{ displayUrl }}
       </ElLink>
     </div>
     <RequestInputBar @onSendRequest="onSendRequest" :request="request"/>
@@ -71,16 +71,23 @@ export default {
 
       headers: [],
       // URL 各个片段
-      urls: {},
+      urls: {
+        hrefPath: null,
+        hrefQuery: null,
+        hashPath: null,
+        hashQuery: null,
+      },
+      // 从 url 中解析的所有参数，可修改
       params: {
         hrefPath: [],
         hrefQuery: [],
         hashPath: [],
         hashQuery: [],
       },
-      body: {},
-      // 缓存
+      // 从 url 中解析的所有参数的缓存副本，不可修改
       urlParams: {},
+      // request body 的 json 字符串
+      body: '',
 
       activeTab: 'Params',
     };
@@ -89,9 +96,11 @@ export default {
     requestCaller() {
       return this.requestUtil || axios;
     },
-    requestFinalUrl({urls}) {
-      return formatUrl(urls, this.requestArgs);
+    // 展示在页面的 rul
+    displayUrl({urls}) {
+      return formatUrl(urls, this.availableArgs);
     },
+    // 页面 url
     requestLinkUrl({urls}) {
       const {params} = this.requestConfig;
       const hrefPath = params.hrefPath || [];
@@ -103,15 +112,28 @@ export default {
       }
       return formatUrl(urls, params);
     },
-    requestArgs() {
+    // 所有可用的参数
+    availableArgs() {
       return filterAvailableProps(this.params);
     },
-    requestConfig({request: {method}, urls, headers, requestArgs}) {
+    // 请求参数的 params
+    requestParams() {
+      return formatArgs(this.availableArgs.hrefQuery);
+    },
+    requestBodyData() {
+      try {
+        return JSON.parse(this.body);
+      } catch (e) {
+        return null;
+      }
+    },
+    requestConfig({request: {method}, urls, headers, availableArgs}) {
       return {
         method: (method || 'GET').toUpperCase(),
         headers: formatArgs(headers),
-        url: simpleUrl(urls, requestArgs),
-        params: formatArgs(requestArgs.hrefQuery),
+        url: simpleUrl(urls, availableArgs),
+        params: this.requestParams,
+        data: this.requestBodyData,
       };
     },
   },
@@ -125,19 +147,32 @@ export default {
         for (let key in err) {
           console.log(key, err[key]);
         }
-        // console.log(err);
       });
-      // console.log(this.requestConfig);
     },
     onReset() {
       this.params = jsonCopy(this.urlParams);
+    },
+    setRequestAll(data) {
+      if (data) {
+        const {request: that, ...other} = data, {request: self} = this;
+        self.request = that;
+        this.$nextTick(() => {
+          for (let key in other) {
+            this[key] = other[key];
+          }
+        });
+      }
+    },
+    getRequestAll() {
+      const {activeTab, ...data} = this;
+      return jsonCopy(data);
     },
   },
   created() {
     this.$watch(() => this.request.url, {
       handler: url => {
         const {params = {}, urls = {}} = url ? parseUrl(url) : {};
-        console.log(params);
+        // console.log(params);
         this.urlParams = Object.freeze(jsonCopy(params));
         this.params = params;
         this.urls = urls;
