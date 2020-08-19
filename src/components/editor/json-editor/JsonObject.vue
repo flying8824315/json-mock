@@ -1,5 +1,5 @@
 <template>
-  <div class="padding-bottom-20">
+  <div class="json-edit-object" :class="{'padding-bottom-15':thisLastIdx>=0}">
     <JsonKeyValuePair
         v-for="(kv,index) in transformedArr"
         :key="index"
@@ -8,9 +8,10 @@
         :theLast="index===thisLastIdx"
         @onDelete="onDelete"
         @onChangeVal="onChangeVal"
+        @onChangeKey="onChangeKey"
         @onConfirmAdd="onConfirmAdd"/>
     <JsonKeyValueAddr
-        class="margin-top-20"
+        class="margin-top-15"
         v-if="thisLastIdx<0"
         @onConfirmAdd="onConfirmAdd"/>
   </div>
@@ -19,7 +20,6 @@
 <script>
 import JsonKeyValuePair from '@/components/editor/json-editor/JsonKeyValuePair';
 import JsonKeyValueAddr from '@/components/editor/json-editor/JsonKeyValueAddr';
-import {jsonCopy} from '@/util';
 
 const coreToStr = Object.prototype.toString;
 
@@ -49,7 +49,6 @@ export default {
           this.$emit('input', {});
         } else {
           const arr = this.doTransform(data);
-          console.log(jsonCopy(arr));
           this.transformedArr = arr;
           this.thisLastIdx = arr.length - 1;
         }
@@ -71,13 +70,19 @@ export default {
       this.thisLastIdx--;
       this.$delete(this.data, pair.key);
     },
+    onChangeKey(oldKey, pair) {
+      this.$delete(this.data, oldKey);
+      this.$set(this.data, pair.key, pair.value);
+    },
     onChangeVal(key, value) {
       this.data[key] = value;
     },
     onConfirmAdd(pair, index) {
+      console.log(index,pair)
       this.transformedArr.splice(index, 0, pair);
-      this.thisLastIdx++;
       this.$set(this.data, pair.key, pair.value);
+      this.thisLastIdx++;
+      console.log(this.transformedArr)
     },
     doTransform(data) {
       if (data) {
@@ -99,6 +104,9 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.json-edit-object {
+  padding-left: 10px;
+  border-left: 1px solid;
+}
 </style>

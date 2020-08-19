@@ -1,8 +1,13 @@
 <template>
-  <div class="margin-top-20 relative">
-    <div class="flex">
-      <ElInput class="width-240" v-model="keyValuePair.key" clearable></ElInput>
-      <div class="width-16 json-colon">:</div>
+  <div class="margin-top-15 relative">
+    <div class="flex json-object-pair relative">
+      <ElInput
+          class="width-240"
+          v-model="keyValuePair.key"
+          @focus="onFocus"
+          @blur="onBlur"
+          clearable/>
+      <div class="width-14 json-colon">:</div>
       <div class="flex-reverse flex-1">
         <div class="flex-1 flex">
           <JsonValue
@@ -18,14 +23,14 @@
         </ElSelect>
       </div>
     </div>
-    <div v-if="isObjectOrArray" class="padding-left-30">
+    <div v-if="isObjectOrArray" class="padding-left-20">
       <ElCollapseTransition>
         <JsonObject v-if="unfolded" v-model="keyValuePair.value"/>
       </ElCollapseTransition>
     </div>
     <button v-if="!editingAddr"
-        @click="editingAddr=true"
-        class="flex-center absolute width-full key-value-plus">
+            @click="editingAddr=true"
+            class="flex-center absolute width-full key-value-plus">
       <ElIcon name="plus"></ElIcon>
     </button>
     <ElCollapseTransition>
@@ -65,6 +70,7 @@ export default {
 
       editingAddr: false,
       unfolded: false,
+      beforeEditKey: null,
     };
   },
   computed: {
@@ -73,9 +79,14 @@ export default {
     },
   },
   methods: {
+    onFocus() {
+      this.beforeEditKey = this.keyValuePair.key;
+    },
+    onBlur() {
+      this.$emit('onChangeKey', this.beforeEditKey, this.keyValuePair);
+    },
     onUnfold() {
       this.unfolded = !this.unfolded;
-      // console.log('====');
     },
     onChangeVal(key, value) {
       this.$emit('onChangeVal', key, value);
@@ -97,11 +108,6 @@ export default {
   },
 };
 </script>
-<style>
-.json-number-value-align-left .el-input__inner {
-  text-align: left;
-}
-</style>
 <style scoped lang="scss">
 .key-value-plus {
   padding: 1px 0;

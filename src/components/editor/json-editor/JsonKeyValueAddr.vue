@@ -1,11 +1,12 @@
 <template>
-  <div class="margin-top-5 relative">
+  <div class="margin-top-5 relative json-object-pair">
     <div class="flex">
       <ElInput class="width-240" v-model="keyValue.key" clearable></ElInput>
-      <div class="width-16 json-colon">:</div>
+      <div class="width-14 json-colon">:</div>
       <div class="flex-reverse flex-1">
         <div class="flex-1 flex">
-          <JsonValue :pair="keyValue"></JsonValue>
+          <JsonValue v-if="isNotObjOrArr" :pair="keyValue"></JsonValue>
+          <div class="flex-1" v-else></div>
           <div>
             <ElButton @click="onConfirm" type="primary" icon="el-icon-check"></ElButton>
           </div>
@@ -41,6 +42,12 @@ export default {
         'Boolean',
       ],
     };
+  },
+  computed:{
+    isNotObjOrArr(){
+      const {keyValue: {type}} = this;
+      return type !== 'Array' && type !== 'Object';
+    }
   },
   methods: {
     onConfirm() {

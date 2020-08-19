@@ -41,6 +41,18 @@ export default {
     .min-width-btn {
       min-width: 120px;
     }
+    .json-object-pair {
+      &::before {
+        content: '';
+        position: absolute;
+        display: block;
+        height: 1px;
+        background: #111;
+        width: 8px;
+        left: -10px;
+        top: 50%;
+      }
+    }
   }
 }
 </style>

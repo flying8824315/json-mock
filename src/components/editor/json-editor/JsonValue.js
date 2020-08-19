@@ -11,8 +11,13 @@ const typedEditorObj = {
   Object: {
     name: 'JsonValueObjectEditor',
     props: ['value'],
+    data() {
+      return {
+        unfolded: false,
+      };
+    },
     render(h) {
-      const self = this, {value} = self;
+      const self = this, {value, unfolded} = self;
       if (!(value instanceof Object)) {
         this.$emit('input', {});
       }
@@ -20,30 +25,46 @@ const typedEditorObj = {
         class: 'min-width-btn',
         on: {
           click() {
+            self.unfolded = !self.unfolded;
             self.$emit('onUnfold');
           },
         },
-      }, [`Object`])]);
+      }, [
+        'Object',
+        h('ElIcon', {
+          class: 'margin-left-10',
+          attrs: {name: unfolded ? 'arrow-down' : 'd-arrow-right'},
+        }),
+      ])]);
     },
   },
   Array: {
     name: 'JsonValueArrayEditor',
     props: ['value'],
+    data() {
+      return {
+        unfolded: false,
+      };
+    },
     render(h) {
-      const self = this, {value} = self;
+      const self = this, {value, unfolded} = self;
       const isArr = value instanceof Array;
       if (!isArr) {
         this.$emit('input', []);
       }
       const length = isArr ? value.length : 0;
       return h('div', {}, [h('ElButton', {
+        attrs: {icon: 'el-icon-d-arrow-right'},
         class: 'min-width-btn',
         on: {
           click() {
             self.$emit('onUnfold');
           },
         },
-      }, [`Array(${length})`])]);
+      }, [`Array(${length})`, h('ElIcon', {
+        class: 'margin-left-10',
+        attrs: {name: unfolded ? 'arrow-down' : 'd-arrow-right'},
+      })])]);
     },
   },
   Boolean: {
