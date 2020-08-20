@@ -20,12 +20,7 @@
 <script>
 import JsonKeyValuePair from '@/components/editor/json-editor/JsonKeyValuePair';
 import JsonKeyValueAddr from '@/components/editor/json-editor/JsonKeyValueAddr';
-
-const coreToStr = Object.prototype.toString;
-
-function typeOf(obj) {
-  return coreToStr.call(obj).slice(8, -1);
-}
+import {typeOf} from '@/components/editor/json-editor/util';
 
 export default {
   name: 'JsonObject',
@@ -44,10 +39,10 @@ export default {
   },
   watch: {
     data: {
-      handler(data) {
+      handler(data, old) {
         if (!data) {
           this.$emit('input', {});
-        } else {
+        } else if (data !== old) {
           const arr = this.doTransform(data);
           this.transformedArr = arr;
           this.thisLastIdx = arr.length - 1;
@@ -78,11 +73,9 @@ export default {
       this.data[key] = value;
     },
     onConfirmAdd(pair, index) {
-      console.log(index,pair)
       this.transformedArr.splice(index, 0, pair);
       this.$set(this.data, pair.key, pair.value);
       this.thisLastIdx++;
-      console.log(this.transformedArr)
     },
     doTransform(data) {
       if (data) {

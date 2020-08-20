@@ -1,20 +1,28 @@
 <template>
   <div class="json-editor">
-    <JsonObject :data="data" @input="onInput"></JsonObject>
+    <JsonObject v-if="typeOf==='Object'" :data="data" @input="onInput"></JsonObject>
+    <JsonObject v-if="typeOf==='Array'" :data="data" @input="onInput"></JsonObject>
   </div>
 </template>
 
 <script>
 import JsonObject from '@/components/editor/json-editor/JsonObject';
+import JsonArray from '@/components/editor/json-editor/JsonArray';
+import {typeOf} from '@/components/editor/json-editor/util';
 
 export default {
   name: 'JsonFormEditor',
-  components: {JsonObject},
+  components: {JsonObject, JsonArray},
   model: {
     prop: 'data',
   },
   props: {
-    data: Object,
+    data: [Object, Array],
+  },
+  computed: {
+    typeOf() {
+      return typeOf(this.data);
+    },
   },
   methods: {
     onInput(data) {
@@ -41,6 +49,7 @@ export default {
     .min-width-btn {
       min-width: 120px;
     }
+
     .json-object-pair {
       &::before {
         content: '';

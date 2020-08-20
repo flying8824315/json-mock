@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import JsonFormEditor from '@/components/editor/json-editor/JsonEditor';
+// import JsonFormEditor from '@/components/editor/json-editor/JsonEditor';
+import JsonFormEditor from '@/components/editor/json/JsonEditor';
 import {jsonCopy} from '@/util';
 
 const jsonData = '[{"items":[{"market_type":"forexdata","symbol":"XAUUSD"},{"market_type":"forexdata","symbol":"UKOIL"},{"market_type":"forexdata","symbol":"CORN"}],"name":""},{"items":[{"market_type":"forexdata","symbol":"XAUUSD"},{"market_type":"forexdata","symbol":"XAGUSD"},{"market_type":"forexdata","symbol":"AUTD"},{"market_type":"forexdata","symbol":"AGTD"}],"name":"贵金属"},{"items":[{"market_type":"forexdata","symbol":"CORN"},{"market_type":"forexdata","symbol":"WHEAT"},{"market_type":"forexdata","symbol":"SOYBEAN"},{"market_type":"forexdata","symbol":"SUGAR"}],"name":"农产品"},{"items":[{"market_type":"forexdata","symbol":"UKOIL"},{"market_type":"forexdata","symbol":"USOIL"},{"market_type":"forexdata","symbol":"NGAS"}],"name":"能源化工"}]';
@@ -40,6 +41,7 @@ export default {
         male: true,
         female: false,
         detail: {},
+        arr: [],
       },
       codemirrorJsonObj: JSON.parse(jsonData),
     };

@@ -8,7 +8,10 @@
           @blur="onBlur"
           clearable/>
       <div class="width-14 json-colon">:</div>
-      <div class="flex-reverse flex-1">
+      <div class="flex flex-1">
+        <ElSelect v-model="keyValuePair.type" class="width-120">
+          <ElOption v-for="type in types" :key="type" :label="type" :value="type"></ElOption>
+        </ElSelect>
         <div class="flex-1 flex">
           <JsonValue
               :pair="keyValuePair"
@@ -18,12 +21,14 @@
               @click="$emit('onDelete', keyValuePair, index)"
               icon="el-icon-delete"/>
         </div>
-        <ElSelect v-model="keyValuePair.type" class="width-120">
-          <ElOption v-for="type in types" :key="type" :label="type" :value="type"></ElOption>
-        </ElSelect>
       </div>
     </div>
-    <div v-if="isObjectOrArray" class="padding-left-20">
+    <div v-if="isObject" class="padding-left-20">
+      <ElCollapseTransition>
+        <JsonObject v-if="unfolded" v-model="keyValuePair.value"/>
+      </ElCollapseTransition>
+    </div>
+    <div v-if="isArray" class="padding-left-20">
       <ElCollapseTransition>
         <JsonObject v-if="unfolded" v-model="keyValuePair.value"/>
       </ElCollapseTransition>
@@ -45,12 +50,14 @@
 <script>
 import JsonKeyValueAddr from '@/components/editor/json-editor/JsonKeyValueAddr';
 import JsonValue from '@/components/editor/json-editor/JsonValue';
+import {dataTypes} from '@/components/editor/json-editor/util';
 
 export default {
   name: 'JsonKeyValuePair',
   components: {
     JsonValue, JsonKeyValueAddr,
     JsonObject: () => import('@/components/editor/json-editor/JsonObject'),
+    JsonArray: () => import('@/components/editor/json-editor/JsonArray'),
   },
   props: {
     keyValuePair: Object,
@@ -59,14 +66,7 @@ export default {
   },
   data() {
     return {
-      types: [
-        'Null',
-        'Array',
-        'Object',
-        'Number',
-        'String',
-        'Boolean',
-      ],
+      types: dataTypes,
 
       editingAddr: false,
       unfolded: false,
@@ -74,8 +74,11 @@ export default {
     };
   },
   computed: {
-    isObjectOrArray({keyValuePair: {type}}) {
-      return type === 'Array' || type === 'Object';
+    isObject({keyValuePair: {type}}) {
+      return type === 'Object';
+    },
+    isArray({keyValuePair: {type}}) {
+      return type === 'Array';
     },
   },
   methods: {

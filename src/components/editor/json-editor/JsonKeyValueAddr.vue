@@ -3,7 +3,10 @@
     <div class="flex">
       <ElInput class="width-240" v-model="keyValue.key" clearable></ElInput>
       <div class="width-14 json-colon">:</div>
-      <div class="flex-reverse flex-1">
+      <div class="flex flex-1">
+        <ElSelect v-model="keyValue.type" class="width-120">
+          <ElOption v-for="type in types" :key="type" :label="type" :value="type"></ElOption>
+        </ElSelect>
         <div class="flex-1 flex">
           <JsonValue v-if="isNotObjOrArr" :pair="keyValue"></JsonValue>
           <div class="flex-1" v-else></div>
@@ -12,9 +15,6 @@
           </div>
           <ElButton @click="onCancel" icon="el-icon-close"></ElButton>
         </div>
-        <ElSelect v-model="keyValue.type" class="width-120">
-          <ElOption v-for="type in types" :key="type" :label="type" :value="type"></ElOption>
-        </ElSelect>
       </div>
     </div>
   </div>
@@ -22,6 +22,7 @@
 
 <script>
 import JsonValue from '@/components/editor/json-editor/JsonValue';
+import {dataTypes} from '@/components/editor/json-editor/util';
 
 function defaultKeyVal() {
   return {available: true, key: '', value: '', type: 'String'};
@@ -33,14 +34,7 @@ export default {
   data() {
     return {
       keyValue: defaultKeyVal(),
-      types: [
-        'Null',
-        'Array',
-        'Object',
-        'Number',
-        'String',
-        'Boolean',
-      ],
+      types: dataTypes,
     };
   },
   computed:{
