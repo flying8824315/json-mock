@@ -1,5 +1,5 @@
 <template>
-  <ElButton @click="onFold">
+  <ElButton @click="onFold" class="w-140">
     <span>Array({{ value.length }})</span>
     <ElIcon name="d-arrow-down"></ElIcon>
   </ElButton>

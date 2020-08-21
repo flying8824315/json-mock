@@ -11,6 +11,7 @@
       </ElCollapseItem>
     </ElCollapse>
     <ElButton type="primary" @click="doDisplay">按钮</ElButton>
+    <ElInput type="textarea" autosize :value="jsonObjStr"></ElInput>
   </div>
 </template>
 
@@ -41,8 +42,11 @@ export default {
         male: true,
         female: false,
         detail: {},
-        arr: [],
+        detail0: {a: 1, b: 2},
+        arr: [1, 2, 3, {val: 12}],
+        arr0: [],
       },
+      jsonObjStr: null,
       codemirrorJsonObj: JSON.parse(jsonData),
     };
   },
@@ -52,7 +56,11 @@ export default {
     },
   },
   methods: {
+    toStr(v) {
+      return JSON.stringify(v,null,2);
+    },
     doDisplay() {
+      this.jsonObjStr = this.toStr(this.jsonObj);
       console.log(jsonCopy(this.jsonObj));
     },
   },

@@ -5,6 +5,9 @@
         :key="idx"
         :index="idx"
         :pair="pair"
+        @onClear="$emit('input', {})"
+        @onDelete="onDelete"
+        @onInputKey="onInputKey"
         @onInputVal="onInputVal"/>
     <JsonObjectAddr v-if="theLastIdx<0"/>
   </div>
@@ -40,7 +43,17 @@ export default {
     },
   },
   methods: {
+    onDelete(pair, idx) {
+      this.transformedArr.splice(idx, 1);
+      this.$delete(this.value, pair.key);
+    },
+    onInputKey(pair, oldKey) {
+      const {value} = this;
+      this.$delete(value, oldKey);
+      this.$set(value, pair.key, pair.value);
+    },
     onInputVal(value, pair) {
+      pair.value = value;
       this.value[pair.key] = value;
     },
     doTransform(data) {

@@ -1,34 +1,27 @@
 <template>
   <div>
     <div class="json-flex">
-      <ElSelect v-model="dataType" class="width-100">
+      <ElSelect v-model="dataType" class="w-100">
         <ElOption v-for="type in typesArr" :key="type" :label="type" :value="type"/>
       </ElSelect>
-      <div class="flex-1">
+      <div class="flex-1 flex-v-center pl-10 w-140">
         <JsonValue
             v-model="targetVal"
             :type="dataType"
             @onFold="onFold"/>
       </div>
     </div>
-    <ElCollapseTransition>
-      <JsonObject v-if="isObj" :value="value"/>
-    </ElCollapseTransition>
-    <ElCollapseTransition>
-      <JsonArray v-if="isArr" :value="value"/>
-    </ElCollapseTransition>
   </div>
 </template>
 
 <script>
-import {dataTypes, typeOf} from './util';
+import {dataTypes, typeOf, FoldMixin} from './util';
 import JsonValue from './JsonValue';
-import JsonArray from './JsonArray';
-import JsonObject from './JsonObject';
 
 export default {
   name: 'JsonProperty',
-  components: {JsonValue, JsonArray, JsonObject},
+  components: {JsonValue},
+  mixins: [FoldMixin],
   props: ['value'],
   watch: {
     value: {
@@ -47,33 +40,18 @@ export default {
         this.$emit('input', now);
       }
     },
-    isObj(now) {
-      console.log('isObj: ', now);
-    },
-    isArr(now) {
-      console.log('isArr: ', now);
+    dataType(now) {
+      this.$emit('onChangeValType', now);
     },
   },
   data() {
     return {
       targetVal: null,
       dataType: 'String',
-      folded: true,
     };
   },
   computed: {
     typesArr: () => [...dataTypes],
-    isObj({dataType, folded}) {
-      return dataType === 'Object' && !folded;
-    },
-    isArr({dataType, folded}) {
-      return dataType === 'Array' && !folded;
-    },
-  },
-  methods: {
-    onFold(fold) {
-      this.folded = fold;
-    },
   },
 };
 </script>

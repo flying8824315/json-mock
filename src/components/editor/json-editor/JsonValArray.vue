@@ -1,15 +1,12 @@
 <template>
-  <ElButton @click="onFold" class="w-140">
-    <span>Object</span>
-    <ElIcon name="d-arrow-down"></ElIcon>
-  </ElButton>
+  <div></div>
 </template>
 
 <script>
 import {JsonObjValMixin} from './util';
 
 export default {
-  name: 'JsonValueObject',
+  name: 'JsonValArray',
   mixins: [JsonObjValMixin],
 };
 </script>

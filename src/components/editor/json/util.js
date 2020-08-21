@@ -4,6 +4,10 @@ export function typeOf(obj) {
   return coreToStr.call(obj).slice(8, -1);
 }
 
+export const provideKey = 'imJsonProperties';
+
+export const provideMixin = {}
+
 export const dataTypes = [
   'Null',
   'Array',
@@ -12,6 +16,20 @@ export const dataTypes = [
   'String',
   'Boolean',
 ];
+
+export const FoldMixin = {
+  data() {
+    return {
+      folded: true,
+    };
+  },
+  methods: {
+    onFold(fold) {
+      this.folded = fold;
+      this.$emit('onFold', fold);
+    },
+  },
+};
 
 export const JsonObjValMixin = {
   props: ['value'],
@@ -27,4 +45,4 @@ export const JsonObjValMixin = {
       this.$emit('onFold', fold);
     },
   },
-}
+};

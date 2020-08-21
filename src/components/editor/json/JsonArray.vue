@@ -6,6 +6,8 @@
           :key="idx"
           :index="idx"
           :value="pair"
+          @onClear="$emit('input', [])"
+          @onDelete="onDelete"
           @onInputVal="onInputVal"/>
     </template>
     <JsonArrayAddr v-else/>
@@ -21,6 +23,9 @@ export default {
   components: {JsonArrayPair, JsonArrayAddr},
   props: ['value'],
   methods: {
+    onDelete(idx) {
+      this.value.splice(idx, 1);
+    },
     onInputVal(value, index) {
       this.value[index] = value;
     },
