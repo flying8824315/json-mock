@@ -3,38 +3,37 @@
     <div>http://localhost:8042/cyhr/main/wechat/{index}/cities-text.jsp?openid={openid}&state=index</div>
     <div>http://localhost:8042/cyhr/main/wechat/index-cities-text.jsp?openid={openid}&state=index</div>
     <div class="flex-center font-bolder height-36">
-      <span class="inline-block padding-right-8 align-middle">Request URL: </span>
+      <span
+          title="点击复制"
+          @click="onCopy"
+          class="inline-block padding-right-8 align-middle request-url-copy">
+        <ElIcon class="font-bolder" name="copy-document"></ElIcon>
+        <span class="margin-left-5">Request URL:</span>
+      </span>
       <ElLink
+          ref="displayUrl"
           :href="displayUrl"
           target="_blank"
-          class="font-bolder align-middle">
-        {{ displayUrl }}
+          class="font-bolder align-middle request-selection">
+        <span>{{ displayUrl }}</span>
       </ElLink>
     </div>
-    <RequestInputBar @onSendRequest="onSendRequest" :request="request"/>
-    <ElTabs v-model="activeTab" class="request-tabs margin-top-20" type="border-card">
-      <ElTabPane label="Params" name="Params">
-        <RequestParams
-            v-model="params"
-            @onReset="onReset"
-            :body.sync="body"/>
-      </ElTabPane>
-      <ElTabPane label="Headers" name="Headers">
-        <RequestArgs appendable :params.sync="headers"/>
-      </ElTabPane>
-    </ElTabs>
+    <RequestDetail
+        @onResetParams="onReset"
+        :request="request"
+        :body.sync="body"
+        :headers.sync="headers"
+        :params.sync="params"/>
     <ResponseDetail/>
   </ElForm>
 </template>
 
 <script>
 import axios from 'axios';
-import RequestArgs from '@/components/request/RequestArgs';
-import RequestInputBar from '@/components/request/RequestInputBar';
-import RequestParams from '@/components/request/RequestParams';
+import RequestDetail from '@/components/request/RequestDetail';
 import ResponseDetail from '@/components/request/ResponseDetail';
 import {formatUrl, parseUrl, simpleUrl} from '@/components/request/url-parser';
-import {jsonCopy} from '@/util';
+import {clipboardCopy, jsonCopy} from '@/util';
 
 function filterAvailable(props) {
   return (props).filter(({enable, prop}) => prop && enable);
@@ -58,7 +57,7 @@ function filterAvailableProps(params) {
 
 export default {
   name: 'RequestPanel',
-  components: {RequestInputBar, RequestParams, RequestArgs, ResponseDetail},
+  components: {ResponseDetail,RequestDetail},
   props: {
     requestUtil: [Object, Function],
   },
@@ -100,18 +99,6 @@ export default {
     displayUrl({urls}) {
       return formatUrl(urls, this.availableArgs);
     },
-    // 页面 url
-    requestLinkUrl({urls}) {
-      const {params} = this.requestConfig;
-      const hrefPath = params.hrefPath || [];
-      // RESTful 请求参数必填
-      for (let param of hrefPath) {
-        if (!(param.value || '').trim()) {
-          return undefined;
-        }
-      }
-      return formatUrl(urls, params);
-    },
     // 所有可用的参数
     availableArgs() {
       return filterAvailableProps(this.params);
@@ -141,6 +128,7 @@ export default {
     onSendRequest() {
       const config = this.requestConfig;
       const caller = this.requestCaller;
+      this.activeTab = null;
       caller.request(config).then(res => {
         console.log(res);
       }, err => {
@@ -152,9 +140,15 @@ export default {
     onReset() {
       this.params = jsonCopy(this.urlParams);
     },
+    onCopy() {
+      clipboardCopy(this.$refs.displayUrl.$el);
+      this.$message.success('已复制');
+    },
     setRequestAll(data) {
       if (data) {
         const {request: that, ...other} = data, {request: self} = this;
+        that.method = that.method || 'GET';
+        that.url = that.url || '';
         self.request = that;
         this.$nextTick(() => {
           for (let key in other) {
@@ -172,7 +166,6 @@ export default {
     this.$watch(() => this.request.url, {
       handler: url => {
         const {params = {}, urls = {}} = url ? parseUrl(url) : {};
-        // console.log(params);
         this.urlParams = Object.freeze(jsonCopy(params));
         this.params = params;
         this.urls = urls;
@@ -187,6 +180,8 @@ export default {
   box-shadow: none;
 }
 </style>
-<style scoped>
-
+<style scoped lang="scss">
+.request-url-copy {
+  cursor: pointer;
+}
 </style>

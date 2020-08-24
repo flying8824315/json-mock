@@ -10,8 +10,6 @@
         </div>
       </ElCollapseItem>
     </ElCollapse>
-    <ElButton type="primary" @click="doDisplay">按钮</ElButton>
-    <ElInput type="textarea" autosize :value="jsonObjStr"></ElInput>
   </div>
 </template>
 
