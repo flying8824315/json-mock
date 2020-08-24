@@ -1,28 +1,24 @@
 <template>
-  <div>
-    <RequestInputBar :request="request"/>
-    <ElTabs v-model="activeTab" class="request-tabs margin-top-20" type="border-card">
-      <ElTabPane label="Params" name="Params">
-        <RequestParams
-            v-model="paramsDetail"
-            @onReset="$emit('onResetParams')"
-            :body.sync="bodyDetail"/>
-      </ElTabPane>
-      <ElTabPane label="Headers" name="Headers">
-        <RequestArgs appendable :params.sync="headerDetail"/>
-      </ElTabPane>
-    </ElTabs>
-  </div>
+  <ElTabs v-model="activeTab" class="request-tabs" type="border-card">
+    <ElTabPane label="Params" name="Params">
+      <RequestParams
+          v-model="paramsDetail"
+          @onReset="$emit('onResetParams')"
+          :body.sync="bodyDetail"/>
+    </ElTabPane>
+    <ElTabPane label="Headers" name="Headers">
+      <RequestArgs appendable :params.sync="headerDetail"/>
+    </ElTabPane>
+  </ElTabs>
 </template>
 
 <script>
 import RequestArgs from '@/components/request/RequestArgs';
-import RequestInputBar from '@/components/request/RequestInputBar';
 import RequestParams from '@/components/request/RequestParams';
 
 export default {
   name: 'RequestDetail',
-  components: {RequestParams, RequestInputBar, RequestArgs},
+  components: {RequestParams, RequestArgs},
   props: {
     request: Object,
     body: [Object, Array, String],

@@ -1,15 +1,9 @@
 <template>
-  <div>
-    <ElCollapse class="margin-top-20 response-detail-container">
-      <ElCollapseItem>
-        <div slot="title" class="padding-left-15 font-bolder">
-          Response
-        </div>
-        <div class="padding-h-20">
-          <JsonFormEditor v-model="jsonObj"></JsonFormEditor>
-        </div>
-      </ElCollapseItem>
-    </ElCollapse>
+<!--  <div slot="title" class="padding-left-15 font-bolder">-->
+<!--    Response-->
+<!--  </div>-->
+  <div class="padding-h-20">
+    <JsonFormEditor v-model="jsonObj"></JsonFormEditor>
   </div>
 </template>
 

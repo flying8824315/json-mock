@@ -17,19 +17,32 @@
           class="font-bolder align-middle request-selection">
         <span>{{ displayUrl }}</span>
       </ElLink>
+      <ElButton type="primary" @click="onSendRequest">发送</ElButton>
     </div>
-    <RequestDetail
-        @onResetParams="onReset"
-        :request="request"
-        :body.sync="body"
-        :headers.sync="headers"
-        :params.sync="params"/>
-    <ResponseDetail/>
+    <ElCollapse v-model="activePanel">
+      <ElCollapseItem title="Request" name="request">
+        <div slot="title" class="flex width-full">
+          <div>Request：</div>
+          <RequestInputBar @click.native.stop :request="request"/>
+          <div class="width-50"></div>
+        </div>
+        <RequestDetail
+            @onResetParams="onReset"
+            :request="request"
+            :body.sync="body"
+            :headers.sync="headers"
+            :params.sync="params"/>
+      </ElCollapseItem>
+      <ElCollapseItem title="Response" name="response">
+        <ResponseDetail/>
+      </ElCollapseItem>
+    </ElCollapse>
   </ElForm>
 </template>
 
 <script>
 import axios from 'axios';
+import RequestInputBar from '@/components/request/RequestInputBar';
 import RequestDetail from '@/components/request/RequestDetail';
 import ResponseDetail from '@/components/request/ResponseDetail';
 import {formatUrl, parseUrl, simpleUrl} from '@/components/request/url-parser';
@@ -57,7 +70,7 @@ function filterAvailableProps(params) {
 
 export default {
   name: 'RequestPanel',
-  components: {ResponseDetail,RequestDetail},
+  components: {RequestInputBar, ResponseDetail, RequestDetail},
   props: {
     requestUtil: [Object, Function],
   },
@@ -88,7 +101,7 @@ export default {
       // request body 的 json 字符串
       body: '',
 
-      activeTab: 'Params',
+      activePanel: 'request',
     };
   },
   computed: {
@@ -128,7 +141,7 @@ export default {
     onSendRequest() {
       const config = this.requestConfig;
       const caller = this.requestCaller;
-      this.activeTab = null;
+      this.activePanel = 'response';
       caller.request(config).then(res => {
         console.log(res);
       }, err => {
@@ -158,7 +171,7 @@ export default {
       }
     },
     getRequestAll() {
-      const {activeTab, ...data} = this;
+      const {activePanel, ...data} = this;
       return jsonCopy(data);
     },
   },

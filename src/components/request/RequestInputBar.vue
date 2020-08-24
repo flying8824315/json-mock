@@ -1,20 +1,18 @@
 <template>
   <div class="request-input-bar">
-    <div>
-      <ElSelect
-          class="request-field-method"
-          v-model="request.method"
-          allow-create
-          filterable
-          default-first-option
-          placeholder="请选择">
-        <ElOption
-            v-for="method in requestMethods"
-            :label="method"
-            :value="method"
-            :key="method"/>
-      </ElSelect>
-    </div>
+    <ElSelect
+        class="request-field-method"
+        v-model="request.method"
+        allow-create
+        filterable
+        default-first-option
+        placeholder="请选择">
+      <ElOption
+          v-for="method in requestMethods"
+          :label="method"
+          :value="method"
+          :key="method"/>
+    </ElSelect>
     <div class="flex-1">
       <ElAutocomplete
           class="width-full"
@@ -31,9 +29,6 @@
           v-model="request.url"
           clearable></ElInput>
           -->
-    </div>
-    <div>
-      <ElButton @click="$emit('onSendRequest')" type="primary">发送</ElButton>
     </div>
   </div>
 </template>
@@ -89,7 +84,9 @@ export default {
 
 <style lang="scss">
 .request-input-bar {
+  width: 100%;
   display: flex;
+  box-sizing: border-box;
 
   & > div {
     box-sizing: border-box;
@@ -104,7 +101,13 @@ export default {
   }
 
   .request-field-method .el-input {
-    width: 120px;
+    padding-left: 5px;
+    width: 100px;
+
+    & input{
+      padding-left: 8px;
+      padding-right: 15px;
+    }
   }
 
   & input {
