@@ -1,24 +1,24 @@
 <template>
   <ElTabs v-model="activeTab" class="request-tabs" type="border-card">
     <ElTabPane label="Params" name="Params">
-      <RequestParams
+      <ParameterDetail
           v-model="paramsDetail"
           @onReset="$emit('onResetParams')"
           :body.sync="bodyDetail"/>
     </ElTabPane>
     <ElTabPane label="Headers" name="Headers">
-      <RequestArgs appendable :params.sync="headerDetail"/>
+      <ParamArgsList appendable :params.sync="headerDetail"/>
     </ElTabPane>
   </ElTabs>
 </template>
 
 <script>
-import RequestArgs from '@/components/request/RequestArgs';
-import RequestParams from '@/components/request/RequestParams';
+import ParamArgsList from '@/components/request/ParamArgsList';
+import ParameterDetail from '@/components/request/ParameterDetail';
 
 export default {
   name: 'RequestDetail',
-  components: {RequestParams, RequestArgs},
+  components: {ParameterDetail, ParamArgsList},
   props: {
     request: Object,
     body: [Object, Array, String],

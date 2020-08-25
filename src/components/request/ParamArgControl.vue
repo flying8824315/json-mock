@@ -24,7 +24,7 @@ import {on, off} from 'element-ui/src/utils/dom';
 import RequestArgConfig from '@/components/request/RequestArgConfig';
 
 export default {
-  name: 'RequestArgControl',
+  name: 'ParamArgControl',
   components: {RequestArgConfig},
   props: {param: Object},
   data() {

@@ -13,11 +13,11 @@
           </div>
         </div>
         <div class="flex">
-          <RequestArgs
+          <ParamArgsList
               v-if="hasRestFul"
               class="width-half"
               :params.sync="value.hrefPath"/>
-          <RequestArgs
+          <ParamArgsList
               appendable
               :class="{'keep-width-full':!hasRestFul}"
               class="width-half"
@@ -44,7 +44,7 @@
 
 <script>
 import {JsonEditor} from '@/components/editor';
-import RequestArgs from '@/components/request/RequestArgs';
+import ParamArgsList from '@/components/request/ParamArgsList';
 import RequestContentType from '@/components/request/RequestContentType';
 
 function hasProperties(obj) {
@@ -52,8 +52,8 @@ function hasProperties(obj) {
 }
 
 export default {
-  name: 'RequestParams',
-  components: {RequestArgs, RequestContentType, JsonEditor},
+  name: 'ParameterDetail',
+  components: {ParamArgsList, RequestContentType, JsonEditor},
   props: {
     // 请求参数
     value: {

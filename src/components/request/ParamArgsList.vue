@@ -7,7 +7,7 @@
           @after-leave="onDelete(index)"
           v-for="(param,index) in parameters"
           :key="index">
-        <RequestArg v-show="param.available" :param="param"/>
+        <ParamArgEntity v-show="param.available" :param="param"/>
       </transition>
     </div>
   </div>
@@ -15,11 +15,11 @@
 
 <script>
 import {newRequestArg} from '@/components/request/url-parser';
-import RequestArg from '@/components/request/RequestArg';
+import ParamArgEntity from '@/components/request/ParamArgEntity';
 
 export default {
-  name: 'RequestArgs',
-  components:{RequestArg},
+  name: 'ParamArgsList',
+  components:{ParamArgEntity},
   props: {
     label: String,
     params: {

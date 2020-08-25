@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: 'RequestArgLabel',
+  name: 'ParamArgLabel',
   props: {param: Object},
 };
 </script>

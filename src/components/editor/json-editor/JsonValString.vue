@@ -5,9 +5,7 @@
       placeholder="Property value"
       clearable/>
   <div v-else class="json-unit json-unit-str">
-    "
-    <span>{{ value }}</span>
-    "
+    "{{ value }}"
   </div>
 </template>
 

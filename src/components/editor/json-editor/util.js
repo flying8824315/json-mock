@@ -6,7 +6,7 @@ export function typeOf(obj) {
 
 export const provideKey = 'imJsonProperties';
 
-export const provideMixin = {}
+export const provideMixin = {};
 
 export const dataTypes = [
   'Null',
@@ -32,7 +32,10 @@ export const FoldMixin = {
 };
 
 export const JsonObjValMixin = {
-  props: ['value'],
+  props: {
+    value: {},
+    editing: Boolean,
+  },
   data() {
     return {
       folded: true,

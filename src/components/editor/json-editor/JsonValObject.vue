@@ -1,5 +1,12 @@
 <template>
-  <div></div>
+  <ElButton v-if="editing" @click="onFold" class="w-140">
+    <span>Object</span>
+    <ElIcon name="d-arrow-down"></ElIcon>
+  </ElButton>
+  <ElTag class="mouse-pointer" v-else size="mini" @click="onFold">
+<!--    <ElIcon name="d-arrow-right"></ElIcon>-->
+    <ElIcon name="more"></ElIcon>
+  </ElTag>
 </template>
 
 <script>

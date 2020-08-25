@@ -39,7 +39,7 @@ function defaultRequestProp() {
 }
 
 export default {
-  name: 'RequestInputBar',
+  name: 'RequestInputUrl',
   props: {
     request: {
       type: Object,
@@ -104,7 +104,7 @@ export default {
     padding-left: 5px;
     width: 100px;
 
-    & input{
+    & input {
       padding-left: 8px;
       padding-right: 15px;
     }

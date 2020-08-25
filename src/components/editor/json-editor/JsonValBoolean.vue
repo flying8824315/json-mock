@@ -1,5 +1,5 @@
 <template>
-  <ElRadioGroup v-if="editing" v-model="boolVal">
+  <ElRadioGroup v-if="editing" v-model="boolVal" class="w-180">
     <ElRadio :label="true">True</ElRadio>
     <ElRadio :label="false">False</ElRadio>
   </ElRadioGroup>
@@ -27,5 +27,7 @@ export default {
 </script>
 
 <style scoped>
-
+.w-180{
+  width: 180px;
+}
 </style>

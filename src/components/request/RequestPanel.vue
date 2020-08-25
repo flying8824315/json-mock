@@ -22,8 +22,8 @@
     <ElCollapse v-model="activePanel">
       <ElCollapseItem title="Request" name="request">
         <div slot="title" class="flex width-full">
-          <div>Request：</div>
-          <RequestInputBar @click.native.stop :request="request"/>
+          <div class="font-bolder">Request：</div>
+          <RequestInputUrl @click.native.stop :request="request"/>
           <div class="width-50"></div>
         </div>
         <RequestDetail
@@ -33,7 +33,8 @@
             :headers.sync="headers"
             :params.sync="params"/>
       </ElCollapseItem>
-      <ElCollapseItem title="Response" name="response">
+      <ElCollapseItem name="response">
+        <div slot="title" class="font-bolder">Response：</div>
         <ResponseDetail/>
       </ElCollapseItem>
     </ElCollapse>
@@ -42,7 +43,7 @@
 
 <script>
 import axios from 'axios';
-import RequestInputBar from '@/components/request/RequestInputBar';
+import RequestInputUrl from '@/components/request/RequestInputUrl';
 import RequestDetail from '@/components/request/RequestDetail';
 import ResponseDetail from '@/components/request/ResponseDetail';
 import {formatUrl, parseUrl, simpleUrl} from '@/components/request/url-parser';
@@ -70,7 +71,7 @@ function filterAvailableProps(params) {
 
 export default {
   name: 'RequestPanel',
-  components: {RequestInputBar, ResponseDetail, RequestDetail},
+  components: {RequestInputUrl, ResponseDetail, RequestDetail},
   props: {
     requestUtil: [Object, Function],
   },
@@ -78,7 +79,7 @@ export default {
     return {
       request: {
         method: 'GET',
-        url: 'http://localhost:8042/cyhr/main/wechat/index-cities-text.jsp?openid=&state=index',
+        url: 'http://192.168.133.107:8042/cyhr/main/wechat/index-cities-text.jsp?openid=&state=index',
       },
 
       headers: [],

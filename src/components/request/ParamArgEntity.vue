@@ -3,19 +3,19 @@
     <FormInput
         class="flex-1" v-model="param.value"
         :placeholder="param.prop?(param.prop+' value'):'value'">
-      <RequestArgLabel slot="label" :param="param"/>
+      <ParamArgLabel slot="label" :param="param"/>
     </FormInput>
-    <RequestArgControl :param="param"/>
+    <ParamArgControl :param="param"/>
   </div>
 </template>
 
 <script>
-import RequestArgLabel from '@/components/request/RequestArgLabel';
-import RequestArgControl from '@/components/request/RequestArgControl';
+import ParamArgLabel from '@/components/request/ParamArgLabel';
+import ParamArgControl from '@/components/request/ParamArgControl';
 
 export default {
-  name: 'RequestArg',
-  components: {RequestArgLabel, RequestArgControl},
+  name: 'ParamArgEntity',
+  components: {ParamArgLabel, ParamArgControl},
   props: {param: Object},
   methods: {
     onInputValue(value) {
