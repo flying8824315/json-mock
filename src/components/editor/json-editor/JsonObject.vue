@@ -4,7 +4,10 @@
         v-for="(pair,idx) in transformedArr"
         :key="idx"
         :index="idx"
-        :pair="pair"/>
+        :pair="pair"
+        @onDelete="onDelete"
+        @onInputKey="onInputKey"
+        @onInputVal="onInputVal"/>
   </div>
 </template>
 

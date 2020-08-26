@@ -28,6 +28,13 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.json-num-left{
+  width: 100%;
+  ::v-deep{
+    input{
+      text-align: left;
+    }
+  }
+}
 </style>

@@ -22,7 +22,10 @@
         <ElTag @click="onEditing" size="mini" type="info">
           <ElIcon name="edit"></ElIcon>
         </ElTag>
-        <ElTag size="mini" type="info">
+        <ElTag @click="onObjectAdd" size="mini" type="info">
+          <ElIcon name="plus"></ElIcon>
+        </ElTag>
+        <ElTag @click="$emit('onDelete', pair, index)" size="mini" type="info">
           <ElIcon name="remove-outline"></ElIcon>
         </ElTag>
       </div>
@@ -33,7 +36,7 @@
 <script>
 import JsonCollapse from './JsonCollapse';
 // import JsonObjectAddr from './JsonObjectAddr';
-import {FoldMixin, provideKey, overrideObject} from './util';
+import {FoldMixin} from './util';
 
 export default {
   name: 'JsonObjectPair',
@@ -54,6 +57,8 @@ export default {
     };
   },
   methods: {
+    onObjectAdd() {
+    },
     onEditing() {
       this.editingPair = true;
     },

@@ -4,7 +4,9 @@
     <ElIcon name="d-arrow-down"></ElIcon>
   </ElButton>
   <ElTag class="mouse-pointer" v-else size="mini" @click="onFold">
-    {<ElIcon name="more"></ElIcon>}
+    <span>{</span>
+    <span>{{keys}}</span>
+    <span>}</span>
   </ElTag>
 </template>
 
@@ -14,6 +16,11 @@ import {JsonObjValMixin} from './util';
 export default {
   name: 'JsonValObject',
   mixins: [JsonObjValMixin],
+  computed: {
+    keys() {
+      return Object.keys(this.value).slice(0,5).join(',');
+    },
+  },
 };
 </script>
 

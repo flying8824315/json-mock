@@ -4,7 +4,7 @@
       <ElHeader>a</ElHeader>
       <ElContainer>
         <ElMain>
-          <div class="main-content">
+          <div class="main-content margin-bottom-200">
             <RequestPanel/>
           </div>
         </ElMain>

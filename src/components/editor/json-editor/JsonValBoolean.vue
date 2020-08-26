@@ -1,5 +1,5 @@
 <template>
-  <ElRadioGroup v-if="editing" v-model="boolVal" class="w-180">
+  <ElRadioGroup v-if="editing" v-model="boolVal" class="w-180 ml-20">
     <ElRadio :label="true">True</ElRadio>
     <ElRadio :label="false">False</ElRadio>
   </ElRadioGroup>

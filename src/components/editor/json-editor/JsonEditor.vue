@@ -71,7 +71,7 @@ export default {
       display: none;
       top: 0;
       right: -100%;
-      width: 50px;
+      width: 75px;
       cursor: pointer;
     }
 
@@ -81,6 +81,9 @@ export default {
 
     .pl-10 {
       padding-left: 10px;
+    }
+    .ml-20{
+      margin-left: 20px;
     }
 
     .json-colon {
