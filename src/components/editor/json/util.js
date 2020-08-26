@@ -6,8 +6,6 @@ export function typeOf(obj) {
 
 export const provideKey = 'imJsonProperties';
 
-export const provideMixin = {}
-
 export const dataTypes = [
   'Null',
   'Array',
@@ -32,17 +30,36 @@ export const FoldMixin = {
 };
 
 export const JsonObjValMixin = {
-  props: ['value'],
+  props: {
+    value: {},
+    editing: Boolean,
+  },
   data() {
     return {
       folded: true,
     };
+  },
+  computed: {
+    thisEditing() {
+      return this.editing;
+    },
+    elTagSize() {
+      return this.thisEditing ? 'undefined' : 'mini';
+    },
+    elTagType() {
+      return this.thisEditing ? 'info' : 'primary';
+    },
   },
   methods: {
     onFold() {
       const fold = !this.folded;
       this.folded = fold;
       this.$emit('onFold', fold);
+    },
+    onNoneEditFold() {
+      if (!this.thisEditing) {
+        this.onFold();
+      }
     },
   },
 };

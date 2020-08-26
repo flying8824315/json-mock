@@ -1,14 +1,21 @@
 <template>
   <ElInput
+      v-if="editing"
       v-model="stringVal"
       placeholder="Property value"
       clearable/>
+  <div v-else class="json-unit json-unit-str" @click="$emit('onEditing')">
+    "{{ value }}"
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'JsonValueString',
-  props: ['value'],
+  name: 'JsonValString',
+  props: {
+    value: String,
+    editing: Boolean,
+  },
   computed: {
     stringVal: {
       get() {

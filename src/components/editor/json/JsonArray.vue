@@ -1,33 +1,37 @@
 <template>
   <div>
-    <template v-if="value&&value.length">
-      <JsonArrayPair
-          v-for="(pair,idx) in value"
-          :key="idx"
-          :index="idx"
-          :value="pair"
-          @onClear="$emit('input', [])"
-          @onDelete="onDelete"
-          @onInputVal="onInputVal"/>
-    </template>
-    <JsonArrayAddr v-else/>
+    <JsonArrayPair
+        v-for="(item,idx) in value"
+        :key="idx"
+        :index="idx"
+        :value="item"
+        @onDelete="onDelete"
+        @onArrayAdd="onArrayAdd"
+        @onInputVal="onInputVal"/>
+    <JsonArrayAddr
+        hideCancel
+        :adding="!(value&&value.length)"
+        @onConfirmAdd="onArrayAdd"/>
   </div>
 </template>
 
 <script>
-import JsonArrayPair from './JsonArrayPair';
 import JsonArrayAddr from './JsonArrayAddr';
+import JsonArrayPair from './JsonArrayPair';
 
 export default {
   name: 'JsonArray',
-  components: {JsonArrayPair, JsonArrayAddr},
+  components: {JsonArrayPair,JsonArrayAddr},
   props: ['value'],
   methods: {
     onDelete(idx) {
       this.value.splice(idx, 1);
     },
-    onInputVal(value, index) {
-      this.value[index] = value;
+    onInputVal(v, idx) {
+      this.value[idx] = v;
+    },
+    onArrayAdd(v, idx) {
+      this.value.splice(idx + 1, 0, v);
     },
   },
 };

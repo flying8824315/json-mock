@@ -5,17 +5,20 @@
         :key="idx"
         :index="idx"
         :pair="pair"
-        @onClear="$emit('input', {})"
         @onDelete="onDelete"
+        @onObjectAdd="onObjectAdd"
         @onInputKey="onInputKey"
         @onInputVal="onInputVal"/>
-    <JsonObjectAddr v-if="theLastIdx<0"/>
+    <JsonObjectAddr
+        hideCancel
+        :adding="theLastIdx<0"
+        @onConfirmAdd="onObjectAdd"/>
   </div>
 </template>
 
 <script>
-import JsonObjectPair from './JsonObjectPair';
 import JsonObjectAddr from './JsonObjectAddr';
+import JsonObjectPair from './JsonObjectPair';
 import {typeOf} from './util';
 
 export default {
@@ -25,8 +28,12 @@ export default {
   data() {
     return {
       transformedArr: [],
-      theLastIdx: 0,
     };
+  },
+  computed: {
+    theLastIdx() {
+      return (this.transformedArr || []).length - 1;
+    },
   },
   watch: {
     value: {
@@ -35,7 +42,6 @@ export default {
           this.$emit('input', {});
         } else if (value !== old) {
           const arr = this.doTransform(value);
-          this.theLastIdx = arr.length - 1;
           this.transformedArr = arr;
         }
       },
@@ -51,6 +57,10 @@ export default {
       const {value} = this;
       this.$delete(value, oldKey);
       this.$set(value, pair.key, pair.value);
+    },
+    onObjectAdd(pair, idx) {
+      this.transformedArr.splice(idx + 1, 0, pair);
+      this.$set(this.value, pair.key, pair.value);
     },
     onInputVal(value, pair) {
       pair.value = value;

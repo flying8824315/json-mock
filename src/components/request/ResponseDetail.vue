@@ -1,15 +1,12 @@
 <template>
-<!--  <div slot="title" class="padding-left-15 font-bolder">-->
-<!--    Response-->
-<!--  </div>-->
   <div class="padding-h-20">
-    <JsonFormEditor v-model="jsonObj"></JsonFormEditor>
+    <JsonFormEditor v-model="jsonObj"/>
+    <ElButton @click="doDisplay">SHOW</ElButton>
   </div>
 </template>
 
 <script>
-// import JsonFormEditor from '@/components/editor/json-editor/JsonEditor';
-import JsonFormEditor from '@/components/editor/json-editor/JsonEditor';
+import JsonFormEditor from '@/components/editor/json';
 import {jsonCopy} from '@/util';
 
 const jsonData = '[{"items":[{"market_type":"forexdata","symbol":"XAUUSD"},{"market_type":"forexdata","symbol":"UKOIL"},{"market_type":"forexdata","symbol":"CORN"}],"name":""},{"items":[{"market_type":"forexdata","symbol":"XAUUSD"},{"market_type":"forexdata","symbol":"XAGUSD"},{"market_type":"forexdata","symbol":"AUTD"},{"market_type":"forexdata","symbol":"AGTD"}],"name":"贵金属"},{"items":[{"market_type":"forexdata","symbol":"CORN"},{"market_type":"forexdata","symbol":"WHEAT"},{"market_type":"forexdata","symbol":"SOYBEAN"},{"market_type":"forexdata","symbol":"SUGAR"}],"name":"农产品"},{"items":[{"market_type":"forexdata","symbol":"UKOIL"},{"market_type":"forexdata","symbol":"USOIL"},{"market_type":"forexdata","symbol":"NGAS"}],"name":"能源化工"}]';
@@ -31,11 +28,12 @@ export default {
       jsonObj: {
         name: 'computer',
         age: 25,
+        null: null,
         male: true,
         female: false,
         detail: {},
         detail0: {a: 1, b: 2},
-        arr: [1, 2, 3, {val: 12}],
+        arr: [1, 2, 3, {val: 12}, ['1', '2'], 3, []],
         arr0: [],
       },
       jsonObjStr: null,
@@ -49,10 +47,10 @@ export default {
   },
   methods: {
     toStr(v) {
-      return JSON.stringify(v,null,2);
+      return JSON.stringify(v, null, 2);
     },
     doDisplay() {
-      this.jsonObjStr = this.toStr(this.jsonObj);
+      // this.jsonObjStr = this.toStr(this.jsonObj);
       console.log(jsonCopy(this.jsonObj));
     },
   },

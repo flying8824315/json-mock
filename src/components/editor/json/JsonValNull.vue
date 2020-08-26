@@ -1,6 +1,6 @@
 <template>
   <ElInput v-if="editing" value="null" class="json-input-null" disabled/>
-  <div v-else class="json-unit json-unit-null">null</div>
+  <div v-else class="json-unit json-unit-null" @click="$emit('onEditing')">null</div>
 </template>
 
 <script>
@@ -21,5 +21,10 @@ export default {
       color: #777;
     }
   }
+}
+
+
+.json-unit-null {
+  color: blueviolet;
 }
 </style>

@@ -1,68 +1,51 @@
 <template>
-  <div>
-    <div v-if="editingPair" class="json-flex json-pair">
-      <div :style="keyStyle">
-        <ElInput
-            v-model="pair.key"
-            @focus="onFocus"
-            @blur="onBlur"
-            placeholder="Property name"
-            clearable/>
-      </div>
-      <div class="width-14 json-colon">:</div>
+  <div class="relative">
+    <div class="json-pair json-flex">
+      <JsonObjectKey
+          v-model="pair.key"
+          :editing="editingPair"
+          @onEditing="onEditing"
+          @focus="onFocus"
+          @blur="onBlur"/>
       <JsonProperty
-          class="flex-1"
           :value="pair.value"
+          :editing="editingPair"
+          @onEditing="onEditing"
           @input="onInputVal"
           @onFold="onFold"/>
-      <div v-if="pair.type==='Object'||pair.type==='Array'">
-        <ElButton
-            @click="onInputVal({})"
-            icon="el-icon-delete"
-            circle/>
-      </div>
-      <ElButton
-          @click="$emit('onDelete',pair,index)"
-          icon="el-icon-remove-outline"
-          circle/>
-    </div>
-    <div  class="json-flex json-pair">
-      <div :style="keyStyle">
-        {{pair.key}}
-      </div>
-      <div class="width-14 json-colon">:</div>
+      <JsonObjectCtrl
+          :editing="editingPair"
+          @onEditing="onEditing"
+          @onConfirmEditing="onConfirmEditing"
+          @onCancelEditing="onCancelEditing"
+          @onDelete="$emit('onDelete', pair, index)"
+          @onAdding="onAdding"/>
     </div>
     <JsonCollapse
         :fold="folded"
         :value="pair.value"
         :type="pair.type"
         @input="onInputVal"/>
-    <ElCollapseTransition>
-      <JsonObjectAddr
-          v-if="editingAddr"
-          @onPropertyAdd="onPropertyAdd"
-          @onCancelAdd="editingAddr=false"/>
-    </ElCollapseTransition>
-    <button
-        v-if="!editingAddr"
-        @click="editingAddr=true"
-        class="json-add">
-      <ElIcon name="plus"/>
-    </button>
+    <JsonObjectAddr
+        :adding="editingAddr"
+        @onConfirmAdd="onConfirmAdd"
+        @onCancelAdd="onCancelAdd"/>
   </div>
 </template>
 
 <script>
-import JsonCollapse from './JsonCollapse';
+import JsonObjectKey from './JsonObjectKey';
+import JsonObjectCtrl from './JsonObjectCtrl';
 import JsonObjectAddr from './JsonObjectAddr';
-import {FoldMixin, provideKey} from './util';
+import {FoldMixin} from './util';
 
 export default {
   name: 'JsonObjectPair',
   mixins: [FoldMixin],
   components: {
+    JsonObjectKey, JsonObjectCtrl, JsonObjectAddr,
+    JsonCollapse: () => import('./JsonCollapse'),
     JsonProperty: () => import('./JsonProperty'),
-    JsonCollapse, JsonObjectAddr,
   },
   props: {
     pair: Object,
@@ -76,6 +59,25 @@ export default {
     };
   },
   methods: {
+    onAdding() {
+      this.editingAddr = true;
+    },
+    onConfirmAdd(pair) {
+      this.$emit('onObjectAdd', pair, this.index);
+      this.editingAddr = false;
+    },
+    onCancelAdd() {
+      this.editingAddr = false;
+    },
+    onEditing() {
+      this.editingPair = true;
+    },
+    onConfirmEditing() {
+      this.editingPair = false;
+    },
+    onCancelEditing() {
+      this.editingPair = false;
+    },
     onFocus() {
       this.focusedKey = this.pair.key;
     },
@@ -88,21 +90,6 @@ export default {
     },
     onInputVal(value) {
       this.$emit('onInputVal', value, this.pair);
-    },
-  },
-  computed: {
-    keyStyle() {
-      const {[provideKey]: {keyWidth} = {}} = this;
-      return {width: keyWidth || '100px'};
-    },
-  },
-  inject: {
-    [provideKey]: {
-      default() {
-        return {
-          keyWidth: 100,
-        };
-      },
     },
   },
 };

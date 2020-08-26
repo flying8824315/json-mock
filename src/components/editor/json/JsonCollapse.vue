@@ -1,5 +1,5 @@
 <template>
-  <div class="json-collapse-body">
+  <div class="json-collapse-body" v-if="type==='Object'||type==='Array'">
     <ElCollapseTransition v-if="type==='Object'">
       <JsonObject v-if="!fold" :value="value" @input="onInput"/>
     </ElCollapseTransition>
@@ -10,19 +10,21 @@
 </template>
 
 <script>
+import JsonArray from './JsonArray';
+import JsonObject from './JsonObject';
+
 export default {
   name: 'JsonCollapse',
-  components: {
-    JsonObject: () => import('./JsonObject'),
-    JsonArray: () => import('./JsonArray'),
-  },
+  components: {JsonArray, JsonObject},
   props: {
+    value: {default: undefined},
+    // value 的实际 type
     type: String,
+    // 是否折叠
     fold: {
       type: Boolean,
       default: true,
     },
-    value: {default: undefined},
   },
   methods: {
     onInput(v) {

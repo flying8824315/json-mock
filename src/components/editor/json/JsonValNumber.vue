@@ -5,7 +5,7 @@
       class="json-num-left"
       controls-position="right"
       placeholder="Property value"/>
-  <div v-else class="json-unit json-unit-num">{{ value }}</div>
+  <div v-else class="json-unit json-unit-num" @click="$emit('onEditing')">{{ value }}</div>
 </template>
 
 <script>
@@ -29,10 +29,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.json-num-left{
+.json-num-left {
   width: 100%;
-  ::v-deep{
-    input{
+
+  ::v-deep {
+    input {
       text-align: left;
     }
   }

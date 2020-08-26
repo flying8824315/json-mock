@@ -1,22 +1,24 @@
 <template>
-  <div class="json-flex json-pair json-pair-add">
-    <ElInput
-        :style="keyStyle"
+  <div v-if="adding" class="json-flex json-pair">
+    <JsonObjectKey
         v-model="pair.key"
-        clearable
-        placeholder="Property name"/>
-    <div class="width-14 json-colon">:</div>
-    <JsonProperty class="flex-1" v-model="pair.value"/>
-    <div>
-      <ElButton @click="onPropertyAdd" circle icon="el-icon-check" type="primary"/>
-    </div>
-    <ElButton @click="onCancelAdd" circle icon="el-icon-close"/>
+        editing/>
+    <JsonProperty
+        editing
+        class="flex-1"
+        v-model="pair.value"
+        @onChangeValueType="onChangeType"/>
+    <JsonObjectCtrl
+        editing
+        :hasCancel="!hideCancel"
+        @onConfirmEditing="onConfirmAdd"
+        @onCancelEditing="$emit('onCancelAdd')"/>
   </div>
 </template>
 
 <script>
-
-import {provideKey} from '@/components/editor/json/util';
+import JsonObjectKey from './JsonObjectKey';
+import JsonObjectCtrl from './JsonObjectCtrl';
 
 function defaultKeyVal() {
   return {available: true, key: '', value: '', type: 'String'};
@@ -25,7 +27,12 @@ function defaultKeyVal() {
 export default {
   name: 'JsonObjectAddr',
   components: {
+    JsonObjectKey, JsonObjectCtrl,
     JsonProperty: () => import('./JsonProperty'),
+  },
+  props: {
+    adding: Boolean,
+    hideCancel: Boolean,
   },
   data() {
     return {
@@ -33,27 +40,11 @@ export default {
     };
   },
   methods: {
-    onPropertyAdd() {
-      this.$emit('onPropertyAdd', this.pair);
+    onConfirmAdd() {
+      this.$emit('onConfirmAdd', this.pair);
     },
-    onCancelAdd() {
-      this.pair = defaultKeyVal();
-      this.$emit('onCancelAdd');
-    },
-  },
-  computed: {
-    keyStyle() {
-      const {[provideKey]: {keyWidth} = {}} = this;
-      return {width: keyWidth || '100px'};
-    },
-  },
-  inject: {
-    [provideKey]: {
-      default() {
-        return {
-          keyWidth: 100,
-        };
-      },
+    onChangeType(type) {
+      this.pair.type = type;
     },
   },
 };

@@ -1,25 +1,27 @@
-import JsonValueNull from './JsonValueNull';
-import JsonValueObject from './JsonValueObject';
-import JsonValueArray from './JsonValueArray';
-import JsonValueString from './JsonValueString';
-import JsonValueNumber from './JsonValueNumber';
-import JsonValueBoolean from './JsonValueBoolean';
+<script>
+import JsonValNull from './JsonValNull';
+import JsonValArray from './JsonValArray';
+import JsonValObject from './JsonValObject';
+import JsonValString from './JsonValString';
+import JsonValNumber from './JsonValNumber';
+import JsonValBoolean from './JsonValBoolean';
+
 import {typeOf} from './util';
 
-const falseValues = [0, '', false, 'false', null];
-const typedEditorObj = {
+const falseValues = [0, '', false, 'false', null], onNoneEvent = () => {
+}, typedEditorObj = {
   Boolean: {
-    editor: JsonValueBoolean,
+    editor: JsonValBoolean,
     from(data) {
       return falseValues.indexOf(data) < 0;
     },
   },
   Null: {
-    editor: JsonValueNull,
+    editor: JsonValNull,
     from: () => null,
   },
   Object: {
-    editor: JsonValueObject,
+    editor: JsonValObject,
     from(data) {
       return Array.isArray(data) ? data.reduce((obj, value, idx) => {
         obj[idx] = value;
@@ -28,10 +30,11 @@ const typedEditorObj = {
     },
   },
   Array: {
-    editor: JsonValueArray,
+    editor: JsonValArray,
     from(data, actDataType) {
       switch (actDataType) {
         case 'String':
+          return data ? [data] : [];
         case 'Number':
         case 'Object':
         case 'Boolean':
@@ -41,7 +44,7 @@ const typedEditorObj = {
     },
   },
   Number: {
-    editor: JsonValueNumber,
+    editor: JsonValNumber,
     from(data) {
       if (data === true) {
         return 1;
@@ -54,13 +57,10 @@ const typedEditorObj = {
     },
   },
   String: {
-    editor: JsonValueString,
+    editor: JsonValString,
     from: data => data === null ? '' : data.toString(),
   },
 };
-
-const onNoneEvent = () => {
-}, jsonValueClass = 'border-box padding-left-10 flex-1 flex-v-center';
 
 export default {
   functional: true,
@@ -70,21 +70,33 @@ export default {
     type: String,
     // 值，实际值的数据类型可能和期望数据类型不一致
     value: {default: undefined},
+    editing: Boolean,
   },
+  // eslint-disable-next-line vue/require-render-return
   render(createElement, {
-    props: {type, value},
+    props: {type, value, editing},
     listeners: {
       input = onNoneEvent,
       onFold = onNoneEvent,
+      onEditing = onNoneEvent,
     },
   }) {
     const actType = typeOf(value), target = typedEditorObj[type];
     if (actType === type) {
-      return createElement(target.editor, {
-        attrs: {value}, on: {input, onFold},
-      });
+      return createElement('div', {
+        class: 'width-full',
+      }, [
+        createElement(target.editor, {
+          attrs: {value, editing}, on: {input, onFold, onEditing},
+        }),
+      ]);
     } else {
       input(target.from(value, actType));
     }
   },
 };
+</script>
+
+<style scoped>
+
+</style>

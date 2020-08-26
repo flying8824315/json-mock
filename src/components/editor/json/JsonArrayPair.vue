@@ -1,58 +1,90 @@
 <template>
   <div>
     <div class="json-flex json-pair">
-      <div class="flex-center json-arr-idx">
-        <span>{{ index }}.</span>
-      </div>
+      <div class="json-idx">{{ index }}:</div>
       <JsonProperty
-          class="w-full"
           :value="value"
-          @onInputVal="onInputVal"
+          :editing="editing"
+          @onEditing="onEditing"
+          @input="onInputVal"
           @onFold="onFold"/>
-      <div v-if="valueType==='Object'||valueType==='Array'">
-        <ElButton @click="$emit('onClear')" circle icon="el-icon-delete"/>
-      </div>
-      <ElButton @click="$emit('onDelete',index)" circle icon="el-icon-remove-outline"/>
+      <JsonObjectCtrl
+          :editing="editing"
+          @onEditing="onEditing"
+          @onConfirmEditing="onConfirmEditing"
+          @onCancelEditing="onCancelEditing"
+          @onDelete="$emit('onDelete', index)"
+          @onAdding="onAdding"/>
     </div>
     <JsonCollapse
-        :type="valueType"
+        :fold="folded"
         :value="value"
-        :fold="folded"/>
-    <button class="json-add"><ElIcon name="plus"/></button>
+        :type="valueTypeOf"
+        @input="onInputVal"/>
+    <JsonArrayAddr
+        :adding="adding"
+        @onConfirmAdd="onConfirmAdd"
+        @onCancelAdd="onCancelAdd"/>
   </div>
 </template>
 
 <script>
-import JsonCollapse from './JsonCollapse';
+import JsonArrayAddr from './JsonArrayAddr';
+import JsonObjectCtrl from './JsonObjectCtrl';
 import {FoldMixin, typeOf} from './util';
 
 export default {
   name: 'JsonArrayPair',
   mixins: [FoldMixin],
   components: {
-    JsonCollapse,
+    JsonObjectCtrl, JsonArrayAddr,
+    JsonCollapse: () => import('./JsonCollapse'),
     JsonProperty: () => import('./JsonProperty'),
   },
   props: {
-    value: {default: undefined},
+    value: {},
     index: Number,
   },
+  data() {
+    return {
+      editing: false,
+      adding: false,
+    };
+  },
   computed: {
-    valueType() {
+    valueTypeOf() {
       return typeOf(this.value);
     },
   },
   methods: {
-    onClear() {
-      this.onInputVal([]);
+    onAdding() {
+      this.adding = true;
     },
-    onInputVal(value) {
-      this.$emit('onInputVal', value, this.index);
+    onConfirmAdd(value) {
+      this.$emit('onArrayAdd', value, this.index);
+      this.adding = false;
+    },
+    onCancelAdd() {
+      this.adding = false;
+    },
+    onEditing() {
+      this.editing = true;
+    },
+    onConfirmEditing() {
+      this.editing = false;
+    },
+    onCancelEditing() {
+      this.editing = false;
+    },
+    onInputVal(v) {
+      this.$emit('onInputVal', v, this.index);
     },
   },
 };
 </script>
 
 <style scoped>
-
+.json-idx {
+  color: #999;
+}
 </style>

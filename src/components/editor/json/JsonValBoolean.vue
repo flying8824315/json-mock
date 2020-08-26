@@ -3,7 +3,7 @@
     <ElRadio :label="true">True</ElRadio>
     <ElRadio :label="false">False</ElRadio>
   </ElRadioGroup>
-  <div v-else class="json-unit json-unit-bool">{{ value }}</div>
+  <div v-else class="json-unit json-unit-bool" @click="$emit('onEditing')">{{ value }}</div>
 </template>
 
 <script>
@@ -27,7 +27,11 @@ export default {
 </script>
 
 <style scoped>
-.w-180{
+.w-180 {
   width: 180px;
+}
+
+.json-unit-bool {
+  color: blueviolet;
 }
 </style>
