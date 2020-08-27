@@ -3,6 +3,7 @@
     <div class="json-flex json-pair">
       <div class="json-idx">{{ index }}:</div>
       <JsonProperty
+          :class="{'flex-1':editing}"
           :value="value"
           :editing="editing"
           @onEditing="onEditing"

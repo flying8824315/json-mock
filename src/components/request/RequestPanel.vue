@@ -100,7 +100,7 @@ export default {
       // 从 url 中解析的所有参数的缓存副本，不可修改
       urlParams: {},
       // request body 的 json 字符串
-      body: '',
+      body: {},
 
       activePanel: 'request',
     };

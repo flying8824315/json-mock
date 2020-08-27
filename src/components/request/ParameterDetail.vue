@@ -27,13 +27,13 @@
       <ElCollapseItem name="2" title="Request Body">
         <div slot="title" class="flex-v-center width-full margin-right-50">
           <div class="font-bolder">Request Body</div>
-          <RequestContentType class="flex-1" v-model="contentType"/>
+          <RequestContentType class="flex-1" v-model="contentTypeVal"/>
         </div>
         <div class="flex">
           <div class="flex-1"></div>
           <ElSelect v-model="jsonEditorTheme">
             <ElOption v-for="name in jsonEditorThemeArr"
-                :key="name" :value="name" :label="name"/>
+                      :key="name" :value="name" :label="name"/>
           </ElSelect>
         </div>
         <JsonEditor ref="jsonEditor" class="json-editor" :theme="jsonEditorTheme" v-model="requestBody"/>
@@ -43,7 +43,8 @@
 </template>
 
 <script>
-import {JsonEditor} from '@/components/editor';
+// import {JsonEditor} from '@/components/editor';
+import JsonEditor from '@/components/editor/json';
 import ParamArgsList from '@/components/request/ParamArgsList';
 import RequestContentType from '@/components/request/RequestContentType';
 
@@ -65,22 +66,25 @@ export default {
       },
     },
     // request body
-    body: String,
+    body: {},
+    contentType: String,
   },
   data() {
     return {
       activeCollapseTab: '1',
-      contentType: null,
       jsonEditorTheme: null,
       jsonEditorThemeArr: [],
     };
   },
-  watch: {
-    contentType(val) {
-      console.log(val);
-    },
-  },
   computed: {
+    contentTypeVal: {
+      get({contentType}) {
+        return contentType;
+      },
+      set(value) {
+        this.$emit('update:contentType', value);
+      },
+    },
     hasRestFul() {
       return hasProperties(this.value.hrefPath);
     },
@@ -98,8 +102,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      const themes = this.$refs.jsonEditor.getThemeNames();
-      this.jsonEditorThemeArr = themes;
+      // const themes = this.$refs.jsonEditor.getThemeNames();
+      // this.jsonEditorThemeArr = themes;
     });
   },
 };

@@ -8,6 +8,7 @@
           @focus="onFocus"
           @blur="onBlur"/>
       <JsonProperty
+          :class="{'flex-1':editingPair}"
           :value="pair.value"
           :editing="editingPair"
           @onEditing="onEditing"

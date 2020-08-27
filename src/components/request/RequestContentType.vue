@@ -10,14 +10,14 @@
         @click.native.stop
         :options="contentTypeArr"/>
     <ElSelect class="flex-1 font-bolder"
-        filterable
-        clearable
-        allow-create
-        default-first-option
-        @change="onChangeVal"
-        @keyup.native.stop
-        v-model="inputVal"
-        v-show="isCustom">
+              filterable
+              clearable
+              allow-create
+              default-first-option
+              @change="onChangeVal"
+              @keyup.native.stop
+              v-model="inputVal"
+              v-show="isCustom">
       <ElOption
           v-for="item in options"
           :key="item"
@@ -32,7 +32,7 @@
 const json = 'application/json',
     urlencoded = 'x-www-form-urlencoded',
     formData = 'form-data',
-    custom = 'Custom';
+    custom = 'Raw';
 
 const baseTypes = [json, urlencoded, formData];
 const fullTypes = [...baseTypes, custom];
@@ -52,18 +52,14 @@ export default {
   watch: {
     value: {
       handler(val) {
-        if (!val) {
-          this.$emit('input', json);
-        } else {
-          const has = contains(baseTypes, val);
-          this.checkedVal = has ? val : custom;
-          if (!has && val) {
-            const {options} = this;
-            if (!contains(options, val)) {
-              this.options.push(val);
-            }
-            this.inputVal = val;
+        const has = contains(baseTypes, val);
+        this.checkedVal = has ? val : custom;
+        if (!has && val) {
+          const {options} = this;
+          if (!contains(options, val)) {
+            this.options.push(val);
           }
+          this.inputVal = val;
         }
       },
       immediate: true,
@@ -71,11 +67,9 @@ export default {
     checkedVal(val) {
       if (val === custom) {
         const {options} = this;
-        if (options.length) {
-          this.inputVal = options[0];
-        } else {
-          this.inputVal = '';
-        }
+        const value = options.length ? options[0] : '';
+        this.onChangeVal(value);
+        this.inputVal = value;
       } else {
         this.$emit('input', val);
       }
