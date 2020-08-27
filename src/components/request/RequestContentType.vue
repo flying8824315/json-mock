@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-v-center">
+  <div class="flex-v-center content-type-val">
     <FormRadioGroup
         clearGaps
         style="width: 620px;"
@@ -9,19 +9,38 @@
         v-model="checkedVal"
         @click.native.stop
         :options="contentTypeArr"/>
-    <ElSelect
-        class="flex-1"
+    <ElSelect class="flex-1 font-bolder"
         filterable
         clearable
         allow-create
+        default-first-option
+        @change="onChangeVal"
         @keyup.native.stop
         v-model="inputVal"
-        v-show="isCustom"/>
+        v-show="isCustom">
+      <ElOption
+          v-for="item in options"
+          :key="item"
+          :label="item"
+          :value="item">
+      </ElOption>
+    </ElSelect>
   </div>
 </template>
 
 <script>
-const json = 'application/json', custom = 'Custom';
+const json = 'application/json',
+    urlencoded = 'x-www-form-urlencoded',
+    formData = 'form-data',
+    custom = 'Custom';
+
+const baseTypes = [json, urlencoded, formData];
+const fullTypes = [...baseTypes, custom];
+
+function contains(strOrArr, value) {
+  return strOrArr.indexOf(value) >= 0;
+}
+
 export default {
   name: 'RequestContentType',
   props: {
@@ -30,26 +49,54 @@ export default {
       default: json,
     },
   },
-  data() {
-    return {
-      checkedVal: json,
-      inputVal: '',
-      contentTypeArr: [
-        {id: json, name: json},
-        {id: 'x-www-form-urlencoded', name: 'x-www-form-urlencoded'},
-        {id: 'form-data', name: 'form-data'},
-        {id: custom, name: custom},
-      ],
-    };
+  watch: {
+    value: {
+      handler(val) {
+        if (!val) {
+          this.$emit('input', json);
+        } else {
+          const has = contains(baseTypes, val);
+          this.checkedVal = has ? val : custom;
+          if (!has && val) {
+            const {options} = this;
+            if (!contains(options, val)) {
+              this.options.push(val);
+            }
+            this.inputVal = val;
+          }
+        }
+      },
+      immediate: true,
+    },
+    checkedVal(val) {
+      if (val === custom) {
+        const {options} = this;
+        if (options.length) {
+          this.inputVal = options[0];
+        } else {
+          this.inputVal = '';
+        }
+      } else {
+        this.$emit('input', val);
+      }
+    },
   },
   computed: {
     isCustom() {
       return this.checkedVal === custom;
     },
   },
-  watch: {
-    checkedVal(val) {
-      this.inputVal = val === custom ? '' : val;
+  data() {
+    return {
+      checkedVal: json,
+      inputVal: '',
+      contentTypeArr: fullTypes.map(type => ({id: type, name: type})),
+      options: [],
+    };
+  },
+  methods: {
+    onChangeVal(v) {
+      this.$emit('input', v);
     },
   },
 };
@@ -65,7 +112,12 @@ export default {
     margin-right: 15px;
   }
 }
-</style>
-<style scoped>
 
+</style>
+<style scoped lang="scss">
+.content-type-val {
+  ::v-deep {
+
+  }
+}
 </style>

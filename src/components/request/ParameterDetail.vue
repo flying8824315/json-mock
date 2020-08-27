@@ -27,7 +27,7 @@
       <ElCollapseItem name="2" title="Request Body">
         <div slot="title" class="flex-v-center width-full margin-right-50">
           <div class="font-bolder">Request Body</div>
-          <RequestContentType class="flex-1"/>
+          <RequestContentType class="flex-1" v-model="contentType"/>
         </div>
         <div class="flex">
           <div class="flex-1"></div>
@@ -70,9 +70,15 @@ export default {
   data() {
     return {
       activeCollapseTab: '1',
+      contentType: null,
       jsonEditorTheme: null,
       jsonEditorThemeArr: [],
     };
+  },
+  watch: {
+    contentType(val) {
+      console.log(val);
+    },
   },
   computed: {
     hasRestFul() {
