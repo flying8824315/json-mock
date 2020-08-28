@@ -2,23 +2,7 @@
   <ElForm label-width="180px" class="bg-white padding-20">
     <div>http://localhost:8042/cyhr/main/wechat/{index}/cities-text.jsp?openid={openid}&state=index</div>
     <div>http://localhost:8042/cyhr/main/wechat/index-cities-text.jsp?openid={openid}&state=index</div>
-    <div class="flex-center font-bolder height-36">
-      <span
-          title="点击复制"
-          @click="onCopy"
-          class="inline-block padding-right-8 align-middle request-url-copy">
-        <ElIcon class="font-bolder" name="copy-document"></ElIcon>
-        <span class="margin-left-5">Request URL:</span>
-      </span>
-      <ElLink
-          ref="displayUrl"
-          :href="displayUrl"
-          target="_blank"
-          class="font-bolder align-middle request-selection">
-        <span>{{ displayUrl }}</span>
-      </ElLink>
-      <ElButton type="primary" @click="onSendRequest">发送</ElButton>
-    </div>
+    <RequestLocation :display-url="displayUrl" @send="onSendRequest"/>
     <ElCollapse v-model="activePanel">
       <ElCollapseItem title="Request" name="request">
         <div slot="title" class="flex width-full">
@@ -43,6 +27,7 @@
 
 <script>
 import axios from 'axios';
+import RequestLocation from '@/components/request/RequestLocation';
 import RequestInputUrl from '@/components/request/RequestInputUrl';
 import RequestDetail from '@/components/request/RequestDetail';
 import ResponseDetail from '@/components/request/ResponseDetail';
@@ -71,7 +56,7 @@ function filterAvailableProps(params) {
 
 export default {
   name: 'RequestPanel',
-  components: {RequestInputUrl, ResponseDetail, RequestDetail},
+  components: {RequestLocation, RequestInputUrl, ResponseDetail, RequestDetail},
   props: {
     requestUtil: [Object, Function],
   },
@@ -195,7 +180,5 @@ export default {
 }
 </style>
 <style scoped lang="scss">
-.request-url-copy {
-  cursor: pointer;
-}
+
 </style>

@@ -10,14 +10,14 @@
         @click.native.stop
         :options="contentTypeArr"/>
     <ElSelect class="flex-1 font-bolder"
-              filterable
-              clearable
-              allow-create
-              default-first-option
-              @change="onChangeVal"
-              @keyup.native.stop
-              v-model="inputVal"
-              v-show="isCustom">
+        filterable
+        clearable
+        allow-create
+        default-first-option
+        @change="onChangeVal"
+        @keyup.native.stop
+        v-model="inputVal"
+        v-show="isCustom">
       <ElOption
           v-for="item in options"
           :key="item"
