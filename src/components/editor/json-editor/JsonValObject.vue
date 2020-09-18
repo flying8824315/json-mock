@@ -4,8 +4,7 @@
     <ElIcon name="d-arrow-down"></ElIcon>
   </ElButton>
   <ElTag class="mouse-pointer" v-else size="mini" @click="onFold">
-<!--    <ElIcon name="d-arrow-right"></ElIcon>-->
-    <ElIcon name="more"></ElIcon>
+    {<ElIcon name="more"></ElIcon>}
   </ElTag>
 </template>
 

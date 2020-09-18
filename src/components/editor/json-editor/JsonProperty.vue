@@ -1,9 +1,9 @@
 <template>
-  <div class="json-flex">
+  <div class="json-flex pl-10">
     <ElSelect v-if="editing" v-model="dataType" class="w-100">
       <ElOption v-for="type in typesArr" :key="type" :label="type" :value="type"/>
     </ElSelect>
-    <div class="flex-1 flex-v-center pl-10">
+    <div class="flex-1 flex-v-center">
       <JsonValue
           v-model="targetVal"
           :type="dataType"

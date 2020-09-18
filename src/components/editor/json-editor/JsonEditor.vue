@@ -54,9 +54,10 @@ export default {
 
   ::v-deep {
 
-    //.el-button.is-circle {
-    //  border-radius: 3px;
-    //}
+    .el-button.is-circle {
+      border-radius: 3px;
+    }
+
     .relative {
       position: relative;
     }
@@ -67,9 +68,15 @@ export default {
 
     .json-pair-op {
       position: sticky;
+      display: none;
       top: 0;
       right: -100%;
+      width: 50px;
       cursor: pointer;
+    }
+
+    .json-pair:hover .json-pair-op {
+      display: block;
     }
 
     .pl-10 {
@@ -84,6 +91,10 @@ export default {
 
     .json-flex {
       display: flex;
+    }
+
+    .json-inline-flex {
+      display: inline-flex;
     }
 
     .flex-1 {

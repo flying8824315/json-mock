@@ -81,7 +81,9 @@ export default {
   }) {
     const actType = typeOf(value), target = typedEditorObj[type];
     if (actType === type) {
-      return createElement('div', {}, [
+      return createElement('div', {
+        class: 'width-full',
+      }, [
         createElement(target.editor, {
           attrs: {value, editing}, on: {input, onFold},
         }),

@@ -49,3 +49,10 @@ export const JsonObjValMixin = {
     },
   },
 };
+
+export function overrideObject(from, to) {
+  const keys = (from ? Object.keys(from) : []);
+  keys.forEach(key => {
+    to[key] = from[key];
+  });
+}
