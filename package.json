@@ -12,7 +12,7 @@
     "core-js": "^3.6.5",
     "element-ui": "^2.4.4",
     "lodash": "^4.17.19",
-    "qs": "^6.9.4",
+    "qs": "^6.9.7",
     "codemirror": "5.56.0",
     "jsonlint": "1.6.3",
     "script-loader": "0.7.2",
